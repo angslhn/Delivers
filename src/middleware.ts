@@ -1,14 +1,15 @@
-import env from "@/config/env";
 import { NextRequest, NextResponse } from "next/server";
 
+import env from "@/config/env";
+
 const authPaths = ["/auth/signin", "/auth/signup"];
-const protectedPaths = ["/cart", "/wishlist", "/profile", "/dashboard", "/transaction", "/payment"];
+const protectedPaths = ["/address", "/cart", "/dashboard", "/notification", "/security", "/transaction", "/user", "/payment", "/wishlist"];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const { cookieName } = env();
 
-  const token = request.cookies.get(cookieName)?.value;
+  const token = request.cookies.get(cookieName as string)?.value;
 
   const isAuthPage = authPaths.some((path) => pathname.startsWith(path));
   const isProtectedPage = protectedPaths.some((path) => pathname.startsWith(path));

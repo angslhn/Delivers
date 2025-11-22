@@ -2,16 +2,17 @@
 
 import type { JSX } from "react";
 
-import useViewport from "@/hooks/useViewport";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import useViewport from "@/hooks/useViewport";
 
 export default function Header(): JSX.Element | undefined {
   const pathname = usePathname();
+  const router = useRouter();
 
   const [width] = useViewport();
 
-  const isAccountPage = pathname.includes("/account");
+  const isAccountPage = ["/account", "/profile"].some((page) => page.includes(pathname));
 
   if (!pathname.includes("/auth")) {
     return (
@@ -34,7 +35,16 @@ export default function Header(): JSX.Element | undefined {
             </div>
           </>
         )}
-        {isAccountPage && <span className="mx-2 font-semibold text-cloud-white">Akun Pengguna</span>}
+        {isAccountPage && (
+          <div className="row-center">
+            {pathname.includes("/profile") && (
+              <svg onClick={() => router.back()} role="button" className="ml-1.5 fill-cloud-white w-4 hover:fill-cloud-white/90" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                <path d="M7.4 273.4C2.7 268.8 0 262.6 0 256s2.7-12.8 7.4-17.4l176-168c9.6-9.2 24.8-8.8 33.9 .8s8.8 24.8-.8 33.9L83.9 232 424 232c13.3 0 24 10.7 24 24s-10.7 24-24 24L83.9 280 216.6 406.6c9.6 9.2 9.9 24.3 .8 33.9s-24.3 9.9-33.9 .8l-176-168z" />
+              </svg>
+            )}
+            <span className="mx-2 font-semibold text-s select-none text-cloud-white">Akun Pengguna</span>
+          </div>
+        )}
         <nav className="h-full xxs:w-16 s-plus:w-24 s-extra-large:w-36 sm:w-44 flex justify-center items-center s-extra-large:gap-1">
           {/* Menu Wishlist dan Keranjang untuk tampilan mobile */}
           {width <= 450 && !isAccountPage && (

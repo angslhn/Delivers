@@ -17,19 +17,19 @@ export default function Signup(): JSX.Element {
           <span className="font-normal text-center text-[0.9rem] text-steel-night select-none">Bergabung sekarang! Dan dapatkan beberapa pengalaman terbaik saat berbelanja di Delivers.</span>
         </div>
         <div className="w-full column-center gap-3">
-          <div className="w-full column-vertical-start gap-1">
+          <div className="w-full column-left gap-1">
             <label className="text-sm font-medium text-steel-night select-none" htmlFor="fullname">
               Nama Lengkap
             </label>
             <input name="fullname" type="text" className="h-8 w-full px-2 rounded-sm shadow outline-none border border-steel-night/40" />
           </div>
-          <div className="w-full column-vertical-start gap-1">
+          <div className="w-full column-left gap-1">
             <label className="text-sm font-medium text-steel-night select-none" htmlFor="email">
               Email
             </label>
             <input name="email" type="text" className="h-8 w-full px-2 rounded-sm shadow outline-none border border-steel-night/40" />
           </div>
-          <div className="w-full column-vertical-start gap-1">
+          <div className="w-full column-left gap-1">
             <label className="text-sm font-medium text-steel-night select-none" htmlFor="password">
               Kata Sandi
             </label>

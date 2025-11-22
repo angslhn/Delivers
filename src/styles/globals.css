@@ -27,15 +27,17 @@ body {
   --breakpoint-s-extra-large: 34.375rem;
 }
 
+/* Font Size */
 @theme {
+  --text-s: 0.9rem;
   --text-xs: 0.75rem;
 }
 
-@utility column-horizontal-start {
+@utility column-top {
   @apply flex flex-col justify-baseline items-center;
 }
 
-@utility column-vertical-start {
+@utility column-left {
   @apply flex flex-col justify-center items-baseline;
 }
 
@@ -43,7 +45,7 @@ body {
   @apply flex flex-col justify-center items-center;
 }
 
-@utility row-start {
+@utility row-left {
   @apply flex justify-baseline items-center;
 }
 

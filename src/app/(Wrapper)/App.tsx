@@ -5,17 +5,17 @@ import type { JSX, ReactNode } from "react";
 import Provider from "@/app/(Wrapper)/Provider";
 import useViewport from "@/hooks/useViewport";
 
-import ErrorDevelopment from "@/page/ErrorDevelopment";
+import ComingSoon from "@/views/ComingSoon";
 
 export default function App({ children }: { children: ReactNode }): JSX.Element {
   const [width] = useViewport();
 
-  const isMobile = width <= 450;
+  const isMobile = width <= 450 && width >= 300;
 
   return (
     <>
       {isMobile && <Provider>{children}</Provider>}
-      {!isMobile && <ErrorDevelopment />}
+      {!isMobile && <ComingSoon />}
     </>
   );
 }

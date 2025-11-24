@@ -4,20 +4,38 @@ import type { ChangeEvent, FormEvent, JSX } from "react";
 
 import Link from "next/link";
 import { useState } from "react";
+import { ZodError } from "zod";
 
-import { SignupData } from "@/types/app";
+import signupSchema from "@/schemas/signup";
+import Input from "@/components/element/Input";
 import Loading from "@/components/element/Loading";
+
+import type { SignupForm } from "@/types/app";
 
 type Field = "fullname" | "email" | "password";
 
 export default function Signup(): JSX.Element {
-  const [data, setData] = useState<SignupData>({ fullname: "", email: "", password: "" });
+  const [data, setData] = useState<SignupForm>({ fullname: "", email: "", password: "" });
+  const [errors, setErrors] = useState<Record<"fullname" | "email" | "password", string>>();
   const [loading, setLoading] = useState<boolean>(false);
 
-  function handleStateInput(field: Field) {
+  function handleInput(field: Field) {
     return function (e: ChangeEvent<HTMLInputElement>) {
       const value = e.target.value;
-      setData((prevState) => ({ ...prevState, [field]: value }));
+
+      setData((prev) => ({ ...prev, [field]: value }));
+
+      if (errors && errors[field]) {
+        setErrors((prev) => {
+          if (!prev) return undefined;
+
+          const newErrors = { ...prev };
+
+          delete newErrors[field];
+
+          return newErrors;
+        });
+      }
     };
   }
 
@@ -26,7 +44,33 @@ export default function Signup(): JSX.Element {
 
     setLoading(true);
 
-    setTimeout(() => setLoading(false), 3000);
+    try {
+      const isValid = signupSchema.parse(data);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        const zodIssues = error.issues;
+
+        const errors = zodIssues.reduce(
+          (acc, issue) => {
+            const field = issue.path[0] as string;
+            const message = issue.message;
+
+            if (!acc[field]) {
+              acc[field] = message;
+            }
+
+            return acc;
+          },
+          {} as Record<string, string>
+        );
+
+        return setErrors(errors);
+      }
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
+    }
   }
 
   return (
@@ -47,40 +91,10 @@ export default function Signup(): JSX.Element {
             Bergabung sekarang! Dan dapatkan beberapa pengalaman terbaik saat berbelanja di Delivers.
           </span>
         </div>
-        <div className="w-full column-center gap-3">
-          <div className="w-full column-left gap-1">
-            <label className="text-sm font-medium text-steel-night select-none" htmlFor="fullname">
-              Nama Lengkap
-            </label>
-            <input
-              name="fullname"
-              type="text"
-              onChange={handleStateInput("fullname")}
-              className="h-8 w-full px-2 text-sm rounded-sm shadow outline-none border border-steel-night/40"
-            />
-          </div>
-          <div className="w-full column-left gap-1">
-            <label className="text-sm font-medium text-steel-night select-none" htmlFor="email">
-              Email
-            </label>
-            <input
-              name="email"
-              type="text"
-              onChange={handleStateInput("email")}
-              className="h-8 w-full px-2 text-sm rounded-sm shadow outline-none border border-steel-night/40"
-            />
-          </div>
-          <div className="w-full column-left gap-1">
-            <label className="text-sm font-medium text-steel-night select-none" htmlFor="password">
-              Kata Sandi
-            </label>
-            <input
-              name="password"
-              type="text"
-              onChange={handleStateInput("password")}
-              className="h-8 w-full px-2 text-sm rounded-sm shadow outline-none border border-steel-night/40"
-            />
-          </div>
+        <div className="w-full column-center gap-1">
+          <Input label="Fullname" name="fullname" onChange={handleInput("fullname")} value={data.fullname} invalid={errors?.fullname} />
+          <Input label="Email" name="email" onChange={handleInput("email")} value={data.email} invalid={errors?.email} />
+          <Input label="Password" name="password" onChange={handleInput("password")} value={data.password} invalid={errors?.password} />
           <button
             type="submit"
             className="h-10 my-4 w-40 row-center bg-steel-night font-semibold text-cloud-white rounded-md hover:bg-steel-night/90 hover:text-cloud-white/90 hover:cursor-pointer"

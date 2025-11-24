@@ -26,7 +26,7 @@ export interface JSONProduct {
   total: number;
 }
 
-export interface SignupData {
+export interface SignupForm {
   fullname: string;
   email: string;
   password: string;

@@ -22,10 +22,18 @@ export default function Account(): JSX.Element {
       <div className="w-full my-4 row-center gap-3">
         {!token && (
           <>
-            <button type="button" onClick={() => handleNavigate("/auth/signin")} className="h-8 w-32 text-cloud-white font-semibold text-sm bg-steel-night rounded-md hover:cursor-pointer">
+            <button
+              type="button"
+              onClick={() => handleNavigate("/auth/signin")}
+              className="h-8 w-32 text-cloud-white font-semibold text-sm bg-steel-night rounded-md hover:cursor-pointer"
+            >
               Masuk
             </button>
-            <button type="button" onClick={() => handleNavigate("/auth/signup")} className="h-8 w-32 text-steel-night font-semibold text-sm border border-steel-night rounded-md hover:cursor-pointer">
+            <button
+              type="button"
+              onClick={() => handleNavigate("/auth/signup")}
+              className="h-8 w-32 text-steel-night font-semibold text-sm border border-steel-night rounded-md hover:cursor-pointer"
+            >
               Daftar
             </button>
           </>

@@ -1,9 +1,11 @@
 "use client";
 
-import { type JSX, type ReactNode } from "react";
+import type { JSX, ReactNode } from "react";
 
 import Provider from "@/app/(Wrapper)/Provider";
 import useViewport from "@/hooks/useViewport";
+
+import ErrorDevelopment from "@/page/ErrorDevelopment";
 
 export default function App({ children }: { children: ReactNode }): JSX.Element {
   const [width] = useViewport();
@@ -13,12 +15,7 @@ export default function App({ children }: { children: ReactNode }): JSX.Element 
   return (
     <>
       {isMobile && <Provider>{children}</Provider>}
-      {!isMobile && (
-        <div className="h-screen w-full column-center">
-          <span className="text-steel-night font-semibold">Maaf! Website dalam tahap pengembangan</span>
-          <span className="text-steel-night font-semibold">Kami berusaha untuk memberikan pengalaman terbaik. Silakan kembali lagi nanti!</span>
-        </div>
-      )}
+      {!isMobile && <ErrorDevelopment />}
     </>
   );
 }

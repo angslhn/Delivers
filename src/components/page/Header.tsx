@@ -12,16 +12,24 @@ export default function Header(): JSX.Element | undefined {
 
   const [width] = useViewport();
 
-  const isAccountPage = ["/account", "/profile"].some((page) => page.includes(pathname));
+  const isAccountPage = ["/account", "/profile"].some((page) => page === pathname);
 
   if (!pathname.includes("/auth")) {
     return (
-      <header className={`${isAccountPage ? "h-12" : "h-16"} w-full flex justify-between items-center xxs:gap-4 sm:gap-0 xxs:px-2 sm:px-5 lg:px-8 sticky bg-steel-night`}>
+      <header
+        className={`${isAccountPage ? "h-12" : "h-16"} w-full flex justify-between items-center xxs:gap-4 sm:gap-0 xxs:px-2 sm:px-5 lg:px-8 sticky bg-steel-night`}
+      >
         {/* Tampilan logo dan bar pencarian yang hanya di tampilkan ketika di luar halaman akun */}
         {!isAccountPage && (
           <>
             <div aria-label="Icon Logo" className="h-full xxs:w-14 s-extra-large:w-36 sm:w-44 flex justify-center items-center gap-2">
-              <svg className="fill-cloud-white xxs:w-7 md:w-8 hover:cursor-pointer hover:fill-cloud-white/90" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 1000" xmlSpace="preserve">
+              <svg
+                className="fill-cloud-white xxs:w-7 md:w-8 hover:cursor-pointer hover:fill-cloud-white/90"
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 600 1000"
+                xmlSpace="preserve"
+              >
                 <path d="m26.34 115.32 546.04 123.84 1.51 521.82L26.11 887.19l2-112.84 437.38-97.89-1.11-347.65-438.04-96.48zm83.8-52.44v69.22l118.08 26.57V90.44zm119.15 779.76v66.94l-118.08 27.54 1.59-67.56z" />
                 <path d="m110.14 753.84 118.08-26.21V278.49l-118.08-25.86z" />
               </svg>
@@ -31,14 +39,24 @@ export default function Header(): JSX.Element | undefined {
               <svg className="absolute xxs:left-2 md:left-3 w-4.5 fill-steel-night/80" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                 <path d="M368 208A160 160 0 1 0 48 208a160 160 0 1 0 320 0zM337.1 371.1C301.7 399.2 256.8 416 208 416C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208c0 48.8-16.8 93.7-44.9 129.1L505 471c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0L337.1 371.1z" />
               </svg>
-              <input type="text" className="h-11/12 w-full xxs:px-8 xxs:text-sm md:px-10 rounded-sm font-normal placeholder:text-steel-night/90 bg-cloud-white border-none outline-none" placeholder="Cari barang pilihanmu" />
+              <input
+                type="text"
+                className="h-11/12 w-full xxs:px-8 xxs:text-sm md:px-10 rounded-sm font-normal placeholder:text-steel-night/90 bg-cloud-white border-none outline-none"
+                placeholder="Cari barang pilihanmu"
+              />
             </div>
           </>
         )}
         {isAccountPage && (
           <div className="row-center">
             {pathname.includes("/profile") && (
-              <svg onClick={() => router.back()} role="button" className="ml-1.5 fill-cloud-white w-4 hover:fill-cloud-white/90" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+              <svg
+                onClick={() => router.back()}
+                role="button"
+                className="ml-1.5 fill-cloud-white w-4 hover:fill-cloud-white/90"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 448 512"
+              >
                 <path d="M7.4 273.4C2.7 268.8 0 262.6 0 256s2.7-12.8 7.4-17.4l176-168c9.6-9.2 24.8-8.8 33.9 .8s8.8 24.8-.8 33.9L83.9 232 424 232c13.3 0 24 10.7 24 24s-10.7 24-24 24L83.9 280 216.6 406.6c9.6 9.2 9.9 24.3 .8 33.9s-24.3 9.9-33.9 .8l-176-168z" />
               </svg>
             )}

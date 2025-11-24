@@ -1,11 +1,40 @@
-import type { JSX } from "react";
+"use client";
+
+import type { ChangeEvent, FormEvent, JSX } from "react";
 
 import Link from "next/link";
+import { useState } from "react";
+
+import { SignupData } from "@/types/app";
+import Loading from "@/components/element/Loading";
+
+type Field = "fullname" | "email" | "password";
 
 export default function Signup(): JSX.Element {
+  const [data, setData] = useState<SignupData>({ fullname: "", email: "", password: "" });
+  const [loading, setLoading] = useState<boolean>(false);
+
+  function handleStateInput(field: Field) {
+    return function (e: ChangeEvent<HTMLInputElement>) {
+      const value = e.target.value;
+      setData((prevState) => ({ ...prevState, [field]: value }));
+    };
+  }
+
+  function handleSignup(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    setLoading(true);
+
+    setTimeout(() => setLoading(false), 3000);
+  }
+
   return (
     <main className="h-screen w-full row-center">
-      <form className="xxs:w-11/12 s-plus:w-3/4 s-extra-large:w-2/3 md:w-[23rem] column-center gap-5 px-4 py-4 rounded-xl border border-black/15 shadow">
+      <form
+        onSubmit={handleSignup}
+        className="xxs:w-11/12 s-plus:w-3/4 s-extra-large:w-2/3 md:w-[23rem] column-center gap-5 px-4 py-4 rounded-xl border border-black/15 shadow"
+      >
         <div className="w-full column-center gap-3">
           <div className="row-center gap-2">
             <svg className="w-12 fill-steel-night" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 1000" xmlSpace="preserve">
@@ -14,29 +43,50 @@ export default function Signup(): JSX.Element {
             </svg>
             <h1 className="font-bold text-3xl text-steel-night select-none">Delivers.</h1>
           </div>
-          <span className="font-normal text-center text-[0.9rem] text-steel-night select-none">Bergabung sekarang! Dan dapatkan beberapa pengalaman terbaik saat berbelanja di Delivers.</span>
+          <span className="font-normal text-center text-[0.9rem] text-steel-night select-none">
+            Bergabung sekarang! Dan dapatkan beberapa pengalaman terbaik saat berbelanja di Delivers.
+          </span>
         </div>
         <div className="w-full column-center gap-3">
           <div className="w-full column-left gap-1">
             <label className="text-sm font-medium text-steel-night select-none" htmlFor="fullname">
               Nama Lengkap
             </label>
-            <input name="fullname" type="text" className="h-8 w-full px-2 rounded-sm shadow outline-none border border-steel-night/40" />
+            <input
+              name="fullname"
+              type="text"
+              onChange={handleStateInput("fullname")}
+              className="h-8 w-full px-2 text-sm rounded-sm shadow outline-none border border-steel-night/40"
+            />
           </div>
           <div className="w-full column-left gap-1">
             <label className="text-sm font-medium text-steel-night select-none" htmlFor="email">
               Email
             </label>
-            <input name="email" type="text" className="h-8 w-full px-2 rounded-sm shadow outline-none border border-steel-night/40" />
+            <input
+              name="email"
+              type="text"
+              onChange={handleStateInput("email")}
+              className="h-8 w-full px-2 text-sm rounded-sm shadow outline-none border border-steel-night/40"
+            />
           </div>
           <div className="w-full column-left gap-1">
             <label className="text-sm font-medium text-steel-night select-none" htmlFor="password">
               Kata Sandi
             </label>
-            <input name="password" type="text" className="h-8 w-full px-2 rounded-sm shadow outline-none border border-steel-night/40" />
+            <input
+              name="password"
+              type="text"
+              onChange={handleStateInput("password")}
+              className="h-8 w-full px-2 text-sm rounded-sm shadow outline-none border border-steel-night/40"
+            />
           </div>
-          <button type="submit" className="h-10 my-4 px-14 bg-steel-night font-semibold text-cloud-white rounded-md hover:bg-steel-night/90 hover:text-cloud-white/90 hover:cursor-pointer">
-            Daftar
+          <button
+            type="submit"
+            className="h-10 my-4 w-40 row-center bg-steel-night font-semibold text-cloud-white rounded-md hover:bg-steel-night/90 hover:text-cloud-white/90 hover:cursor-pointer"
+          >
+            {!loading && "Daftar"}
+            {loading && <Loading />}
           </button>
           <div className="flex gap-1">
             <span className="text-sm select-none">Anda sudah memiliki akun?</span>

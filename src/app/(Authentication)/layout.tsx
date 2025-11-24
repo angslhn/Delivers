@@ -10,7 +10,12 @@ export default function AuthLayout({ children }: Readonly<{ children: ReactNode 
   return (
     <>
       <nav className="w-full px-4 py-2">
-        <button aria-label="Button Back" type="button" onClick={() => router.back()} className="h-8 w-24 flex justify-center items-center gap-2 bg-steel-night rounded-sm hover:bg-steel-night/95 hover:cursor-pointer">
+        <button
+          aria-label="Button Back"
+          type="button"
+          onClick={() => router.back()}
+          className="h-8 w-24 flex justify-center items-center gap-2 bg-steel-night rounded-sm hover:bg-steel-night/95 hover:cursor-pointer"
+        >
           <svg className="w-3.5" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
             <path
               className="fill-cloud-white"

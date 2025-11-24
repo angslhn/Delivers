@@ -25,3 +25,9 @@ export interface JSONProduct {
   skip: number;
   total: number;
 }
+
+export interface SignupData {
+  fullname: string;
+  email: string;
+  password: string;
+}

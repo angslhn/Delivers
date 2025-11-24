@@ -5,7 +5,14 @@
     "sourceType": "module",
     "project": "./tsconfig.json"
   },
-  "extends": ["next", "next/core-web-vitals", "eslint:recommended", "plugin:@typescript-eslint/recommended", "plugin:import/recommended", "plugin:prettier/recommended"],
+  "extends": [
+    "next",
+    "next/core-web-vitals",
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/recommended",
+    "plugin:prettier/recommended"
+  ],
   "plugins": ["@typescript-eslint", "unused-imports"],
   "rules": {
     "no-console": "warn",

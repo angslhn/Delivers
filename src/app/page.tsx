@@ -32,7 +32,10 @@ export default function Home(): JSX.Element {
       </div>
       <div className="w-full row-evenly flex-wrap">
         {products?.slice(0, 14).map((product, index) => (
-          <div key={product.id} className={`${index > 1 && "mt-3"} border-[0.025rem] border-steel-night/5 h-52 w-40 rounded-md shadow shadow-steel-night/5`}>
+          <div
+            key={product.id}
+            className={`${index > 1 && "mt-3"} border-[0.025rem] border-steel-night/5 h-52 w-40 rounded-md shadow shadow-steel-night/5`}
+          >
             <Image className="h-[8rem] w-full" src={product.images[0]} alt={product.title} height={128} width={160} />
             <div className="flex flex-col gap-1 mx-2">
               <span className="h-7 leading-3.5 my-auto text-[0.8rem] text-steel-night">{title(product.title)}</span>

@@ -14,7 +14,9 @@ export default function Signin(): JSX.Element {
             </svg>
             <h1 className="font-bold text-3xl text-steel-night select-none">Delivers.</h1>
           </div>
-          <span className="font-normal text-center text-[0.9rem] text-steel-night select-none">Masuk sekarang untuk menikmati kemudahan berbelanja dan penawaran eksklusif.</span>
+          <span className="font-normal text-center text-[0.9rem] text-steel-night select-none">
+            Masuk sekarang untuk menikmati kemudahan berbelanja dan penawaran eksklusif.
+          </span>
         </div>
         <div className="w-full column-center gap-3">
           <div className="w-full column-left gap-1">
@@ -29,7 +31,10 @@ export default function Signin(): JSX.Element {
             </label>
             <input name="password" type="text" className="h-8 w-full px-2 rounded-sm shadow outline-none border border-steel-night/40" />
           </div>
-          <button type="submit" className="h-10 my-4 px-14 bg-steel-night font-semibold text-cloud-white rounded-md hover:bg-steel-night/90 hover:text-cloud-white/90 hover:cursor-pointer">
+          <button
+            type="submit"
+            className="h-10 my-4 px-14 bg-steel-night font-semibold text-cloud-white rounded-md hover:bg-steel-night/90 hover:text-cloud-white/90 hover:cursor-pointer"
+          >
             Masuk
           </button>
           <div className="flex gap-1">

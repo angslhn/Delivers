@@ -11,6 +11,7 @@ import Input from "@/components/element/Input";
 import Loading from "@/components/element/Loading";
 
 import type { SignupForm } from "@/types/app";
+import capitalize from "@/helpers/capitalize";
 
 type Field = "fullname" | "email" | "password";
 
@@ -21,7 +22,7 @@ export default function Signup(): JSX.Element {
 
   function handleInput(field: Field) {
     return function (e: ChangeEvent<HTMLInputElement>) {
-      const value = e.target.value;
+      const value = field !== "fullname" ? e.target.value : capitalize(e.target.value);
 
       setData((prev) => ({ ...prev, [field]: value }));
 
@@ -39,13 +40,25 @@ export default function Signup(): JSX.Element {
     };
   }
 
-  function handleSignup(e: FormEvent<HTMLFormElement>) {
+  async function handleSignup(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     setLoading(true);
 
     try {
-      const isValid = signupSchema.parse(data);
+      const form = signupSchema.parse(data);
+
+      const response: Response = await fetch("/api/v1/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      });
+
+      const result = await response.json();
+
+      console.log(result);
     } catch (error) {
       if (error instanceof ZodError) {
         const zodIssues = error.issues;
@@ -67,9 +80,7 @@ export default function Signup(): JSX.Element {
         return setErrors(errors);
       }
     } finally {
-      setTimeout(() => {
-        setLoading(false);
-      }, 1000);
+      setLoading(false);
     }
   }
 
@@ -92,9 +103,9 @@ export default function Signup(): JSX.Element {
           </span>
         </div>
         <div className="w-full column-center gap-1">
-          <Input label="Fullname" name="fullname" onChange={handleInput("fullname")} value={data.fullname} invalid={errors?.fullname} />
+          <Input label="Nama Lengkap" name="fullname" onChange={handleInput("fullname")} value={data.fullname} invalid={errors?.fullname} />
           <Input label="Email" name="email" onChange={handleInput("email")} value={data.email} invalid={errors?.email} />
-          <Input label="Password" name="password" onChange={handleInput("password")} value={data.password} invalid={errors?.password} />
+          <Input label="Kata Sandi" name="password" onChange={handleInput("password")} value={data.password} invalid={errors?.password} />
           <button
             type="submit"
             className="h-10 my-4 w-40 row-center bg-steel-night font-semibold text-cloud-white rounded-md hover:bg-steel-night/90 hover:text-cloud-white/90 hover:cursor-pointer"

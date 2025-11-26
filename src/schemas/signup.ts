@@ -7,7 +7,7 @@ const signupSchema = zod.object({
     .min(1, "Nama lengkap harus diisi")
     .regex(/^[a-zA-Z\s'.]+$/, "Nama lengkap tidak boleh selain huruf")
     .min(3, "Nama lengkap terlalu pendek minimal 3 huruf")
-    .max(55, "Nama lengkap terlalu panjang maksimal 55 huruf")
+    .max(100, "Nama lengkap terlalu panjang maksimal 55 huruf")
     .transform((fullname) => {
       return fullname
         .split(/\s+/)
@@ -22,7 +22,7 @@ const signupSchema = zod.object({
     .min(1, "Email harus diisi")
     .email("Format email yang digunakan tidak valid")
     .toLowerCase()
-    .max(255, "Email yang digunakan telalu panjang atau tidak valid"),
+    .max(254, "Email yang digunakan telalu panjang atau tidak valid"),
   password: zod
     .string()
     .min(8, "Kata sandi minimal 8 karakter")

@@ -1,8 +1,15 @@
+import { RowDataPacket } from "mysql2";
+
 export interface Token {
   data: string;
 }
 
 export interface Env {
+  dbHost: string | undefined;
+  dbPort: number | undefined;
+  dbUser: string | undefined;
+  dbName: string | undefined;
+  dbPassword: string | undefined;
   cookieName: string | undefined;
 }
 
@@ -26,8 +33,14 @@ export interface JSONProduct {
   total: number;
 }
 
-export interface SignupForm {
+export interface CreateUser {
   fullname: string;
   email: string;
   password: string;
 }
+
+export interface UserData extends CreateUser {
+  id: number;
+}
+
+export interface UserDataPacket extends UserData, RowDataPacket {}

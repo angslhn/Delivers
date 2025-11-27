@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import env from "@/config/env";
 
-const authPaths = ["/auth/signin", "/auth/signup"];
+const authPaths = ["/login", "/register"];
 const protectedPaths = ["/address", "/cart", "/dashboard", "/notification", "/security", "/transaction", "/user", "/payment", "/wishlist"];
 
 export function middleware(request: NextRequest) {

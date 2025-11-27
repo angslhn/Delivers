@@ -33,13 +33,16 @@ export interface JSONProduct {
   total: number;
 }
 
-export interface CreateUser {
-  fullname: string;
+export interface FormLogin {
   email: string;
   password: string;
 }
 
-export interface UserData extends CreateUser {
+export interface FormRegister extends FormLogin {
+  fullname: string;
+}
+
+export interface UserData extends FormRegister {
   id: number;
 }
 

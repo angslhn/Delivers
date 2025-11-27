@@ -10,13 +10,13 @@ import signupSchema from "@/schemas/signup";
 import Input from "@/components/element/Input";
 import Loading from "@/components/element/Loading";
 
-import type { SignupForm } from "@/types/app";
+import type { FormRegister } from "@/types/app";
 import capitalize from "@/helpers/capitalize";
 
 type Field = "fullname" | "email" | "password";
 
-export default function Signup(): JSX.Element {
-  const [data, setData] = useState<SignupForm>({ fullname: "", email: "", password: "" });
+export default function Register(): JSX.Element {
+  const [data, setData] = useState<FormRegister>({ fullname: "", email: "", password: "" });
   const [errors, setErrors] = useState<Record<"fullname" | "email" | "password", string>>();
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -115,7 +115,7 @@ export default function Signup(): JSX.Element {
           </button>
           <div className="flex gap-1">
             <span className="text-sm select-none">Anda sudah memiliki akun?</span>
-            <Link href="/auth/signin" className="text-sm font-medium select-none hover:underline">
+            <Link href="/login" className="text-sm font-medium select-none hover:underline">
               Masuk
             </Link>
           </div>

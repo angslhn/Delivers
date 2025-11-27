@@ -14,9 +14,7 @@ export default function Signin(): JSX.Element {
             </svg>
             <h1 className="font-bold text-3xl text-steel-night select-none">Delivers.</h1>
           </div>
-          <span className="font-normal text-center text-[0.9rem] text-steel-night select-none">
-            Masuk sekarang untuk menikmati kemudahan berbelanja dan penawaran eksklusif.
-          </span>
+          <span className="font-normal text-center text-[0.9rem] text-steel-night select-none">Anda harus memverifikasi email terlebih dahulu</span>
         </div>
         <div className="w-full column-center gap-3">
           <div className="w-full column-left gap-1">

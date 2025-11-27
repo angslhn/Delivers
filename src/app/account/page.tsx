@@ -14,7 +14,7 @@ export default function Account(): JSX.Element {
   const token = false;
 
   function handleNavigate(path: string) {
-    router.push(path);
+    return () => router.push(path);
   }
 
   return (
@@ -24,14 +24,14 @@ export default function Account(): JSX.Element {
           <>
             <button
               type="button"
-              onClick={() => handleNavigate("/auth/signin")}
+              onClick={handleNavigate("/login")}
               className="h-8 w-32 text-cloud-white font-semibold text-sm bg-steel-night rounded-md hover:cursor-pointer"
             >
               Masuk
             </button>
             <button
               type="button"
-              onClick={() => handleNavigate("/auth/signup")}
+              onClick={handleNavigate("/register")}
               className="h-8 w-32 text-steel-night font-semibold text-sm border border-steel-night rounded-md hover:cursor-pointer"
             >
               Daftar

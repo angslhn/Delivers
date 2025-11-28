@@ -1,11 +1,12 @@
 import type { JSX, ReactNode } from "react";
 
-import App from "@/containers/App";
+import App from "@/container/App";
 import Header from "@/components/ui/Header";
 import Menu from "@/components/ui/Menu";
 import type { Metadata } from "next";
 
 import "@/styles/globals.css";
+import Alert from "@/components/element/Alert";
 
 export const metadata: Metadata = {
   title: "Delivers",
@@ -27,6 +28,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
     <html lang="id">
       <body>
         <App>
+          <Alert />
           <Header />
           {children}
           <Menu />

@@ -12,6 +12,7 @@ import Loading from "@/components/element/Loading";
 
 import type { FormRegister } from "@/types/global";
 import capitalize from "@/helpers/capitalize";
+import useAlert from "@/hooks/useAlert";
 
 type Field = "fullname" | "email" | "password";
 
@@ -19,6 +20,8 @@ export default function Register(): JSX.Element {
   const [data, setData] = useState<FormRegister>({ fullname: "", email: "", password: "" });
   const [errors, setErrors] = useState<Record<"fullname" | "email" | "password", string>>();
   const [loading, setLoading] = useState<boolean>(false);
+
+  const { alert, setAlert } = useAlert();
 
   function handleInput(field: Field) {
     return function (e: ChangeEvent<HTMLInputElement>) {
@@ -92,11 +95,11 @@ export default function Register(): JSX.Element {
       >
         <div className="w-full column-center gap-3">
           <div className="row-center gap-2">
-            <svg className="w-12 fill-steel-night" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 1000" xmlSpace="preserve">
+            <svg className="w-10 fill-steel-night" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 1000" xmlSpace="preserve">
               <path d="m26.34 115.32 546.04 123.84 1.51 521.82L26.11 887.19l2-112.84 437.38-97.89-1.11-347.65-438.04-96.48zm83.8-52.44v69.22l118.08 26.57V90.44zm119.15 779.76v66.94l-118.08 27.54 1.59-67.56z" />
               <path d="m110.14 753.84 118.08-26.21V278.49l-118.08-25.86z" />
             </svg>
-            <h1 className="font-bold text-3xl text-steel-night select-none">Delivers.</h1>
+            <h1 className="font-bold text-2xl text-steel-night select-none">Delivers.</h1>
           </div>
           <span className="font-normal text-center text-[0.9rem] text-steel-night select-none">
             Bergabung sekarang! Dan dapatkan beberapa pengalaman terbaik saat berbelanja di Delivers.

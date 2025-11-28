@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import token from "@/helpers/token";
 import register from "@/schemas/register";
 
-import { User } from "@/models/User";
+import { User } from "@/model/User";
 import { future } from "@/helpers/datetime";
 import { NextRequest, NextResponse } from "next/server";
 

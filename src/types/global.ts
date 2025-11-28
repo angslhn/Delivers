@@ -13,6 +13,15 @@ export interface Env {
   cookieName: string | undefined;
 }
 
+export type Alert = {
+  code: number;
+  show: boolean;
+  text: string | null;
+  confirm?: () => void;
+  continue?: () => void;
+  cancel?: () => void;
+};
+
 export interface Product {
   availabilityStatus: string;
   brand: string;

@@ -1,8 +1,10 @@
+"use client";
+
 import { JSX } from "react";
 
 export default function ComingSoon(): JSX.Element {
   return (
-    <section>
+    <main>
       <div className="relative min-h-screen w-full bg-[url('https://www.material-tailwind.com/logos/pattern-lines.png')] bg-cover bg-no-repeat">
         <div className="grid min-h-screen px-8">
           <div className="container relative z-10 my-auto mx-auto grid place-items-center text-center">
@@ -18,6 +20,6 @@ export default function ComingSoon(): JSX.Element {
           </div>
         </div>
       </div>
-    </section>
+    </main>
   );
 }

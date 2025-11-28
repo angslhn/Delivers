@@ -8,7 +8,7 @@ import Image from "next/image";
 import firstBanner from "@/assets/images/banner_1.jpg";
 import { price, sold, title } from "@/helpers/product";
 
-import type { JSONProduct, Product } from "@/types/globals";
+import type { JSONProduct, Product } from "@/types/global";
 
 export default function Home(): JSX.Element {
   const [products, setProducts] = useState<[Product]>();

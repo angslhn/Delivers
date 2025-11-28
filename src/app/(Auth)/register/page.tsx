@@ -10,7 +10,7 @@ import signupSchema from "@/schemas/register";
 import Input from "@/components/element/Input";
 import Loading from "@/components/element/Loading";
 
-import type { FormRegister } from "@/types/globals";
+import type { FormRegister } from "@/types/global";
 import capitalize from "@/helpers/capitalize";
 
 type Field = "fullname" | "email" | "password";

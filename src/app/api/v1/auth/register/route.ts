@@ -7,7 +7,7 @@ import { User } from "@/models/User";
 import { future } from "@/helpers/datetime";
 import { NextRequest, NextResponse } from "next/server";
 
-import type { FormRegister } from "@/types/globals";
+import type { FormRegister } from "@/types/global";
 
 export async function POST(request: NextRequest) {
   try {

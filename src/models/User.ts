@@ -2,7 +2,7 @@ import id from "@/helpers/id";
 import { query } from "@/libs/mysql";
 
 import type { ResultSetHeader } from "mysql2";
-import type { UserCreate, UserDataPacket } from "@/types/globals";
+import type { UserCreate, UserDataPacket } from "@/types/global";
 
 export const User = {
   findById: async (id: number): Promise<UserDataPacket | null> => {

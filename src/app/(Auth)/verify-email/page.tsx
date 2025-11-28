@@ -1,14 +1,19 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 
 import Loading from "@/components/element/Loading";
+import InputOTP from "@/components/element/InputOTP";
 
-import type { JSX, FormEvent, ClipboardEvent } from "react";
-import OTPInput from "@/components/element/OTPInput";
+import type { JSX, FormEvent } from "react";
 
 export default function VerifyEmail(): JSX.Element {
   const [loading, setLoading] = useState<boolean>(false);
+  const [otp, setOtp] = useState<string | null>(null);
+
+  function handleInputOtp(otp: string) {
+    setOtp(otp);
+  }
 
   async function handleVerify(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -24,18 +29,19 @@ export default function VerifyEmail(): JSX.Element {
       >
         <div className="w-full column-center gap-3">
           <div className="row-center gap-2">
-            <svg className="w-12 fill-steel-night" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 1000" xmlSpace="preserve">
+            <svg className="w-10 fill-steel-night" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 1000" xmlSpace="preserve">
               <path d="m26.34 115.32 546.04 123.84 1.51 521.82L26.11 887.19l2-112.84 437.38-97.89-1.11-347.65-438.04-96.48zm83.8-52.44v69.22l118.08 26.57V90.44zm119.15 779.76v66.94l-118.08 27.54 1.59-67.56z" />
               <path d="m110.14 753.84 118.08-26.21V278.49l-118.08-25.86z" />
             </svg>
-            <h1 className="font-bold text-3xl text-steel-night select-none">Delivers.</h1>
+            <h1 className="font-bold text-2xl text-steel-night select-none">Delivers.</h1>
           </div>
           <span className="font-normal text-center text-[0.9rem] text-steel-night select-none">
             Kami telah mengirimkan kode verifkasi melalui email yang Anda daftarkan
           </span>
         </div>
-        <div className="w-full column-center gap-1">
-          <OTPInput length={6} />
+        <div className="w-full column-center">
+          <label className="my-2 text-steel-night font-semibold">Kode Verifikasi</label>
+          <InputOTP length={6} onComplete={handleInputOtp} />
           <button
             type="submit"
             className="h-10 my-4 w-40 row-center bg-steel-night font-semibold text-cloud-white rounded-md hover:bg-steel-night/90 hover:text-cloud-white/90 hover:cursor-pointer"

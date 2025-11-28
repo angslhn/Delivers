@@ -5,7 +5,7 @@ import type { JSX, ReactNode } from "react";
 import Provider from "@/containers/Provider";
 import useViewport from "@/hooks/useViewport";
 
-import ComingSoon from "@/views/ComingSoon";
+import ComingSoon from "@/page/ComingSoon";
 
 export default function App({ children }: { children: ReactNode }): JSX.Element {
   const [width] = useViewport();

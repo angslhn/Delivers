@@ -1,18 +1,16 @@
-import { NextRequest, NextResponse } from "next/server";
-
 import env from "@/config/env";
-
-const authPaths = ["/login", "/register"];
-const protectedPaths = ["/address", "/cart", "/dashboard", "/notification", "/security", "/transaction", "/user", "/payment", "/wishlist"];
+import { NextRequest, NextResponse } from "next/server";
+import { authPath, protectedPath } from "@/libs/path";
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
   const { cookieName } = env();
 
   const token = request.cookies.get(cookieName as string)?.value;
 
-  const isAuthPage = authPaths.some((path) => pathname.startsWith(path));
-  const isProtectedPage = protectedPaths.some((path) => pathname.startsWith(path));
+  const isAuthPage = authPath.some((path) => pathname.startsWith(path));
+  const isProtectedPage = protectedPath.some((path) => pathname.startsWith(path));
 
   if (token && isAuthPage) {
     const homeUrl = new URL("/", request.url);
@@ -21,7 +19,7 @@ export function middleware(request: NextRequest) {
   }
 
   if (!token && isProtectedPage) {
-    const signinUrl = new URL("/auth/signin", request.url);
+    const signinUrl = new URL("/login", request.url);
 
     return NextResponse.redirect(signinUrl);
   }

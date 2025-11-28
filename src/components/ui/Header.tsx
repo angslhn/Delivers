@@ -3,28 +3,26 @@
 import type { JSX } from "react";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
 import useViewport from "@/hooks/useViewport";
+import { authPath, accountPath } from "@/libs/path";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function Header(): JSX.Element | undefined {
-  const pathname = usePathname();
   const router = useRouter();
+  const pathname = usePathname();
 
   const [width] = useViewport();
 
-  const AuthPage = ["/email-verification", "/forgot-password", "/login", "/login/verify", "/register", "/reset-password", "/verify-email"];
-  const AccountPage = ["/account", "/profile"];
+  const isAuthPath = authPath.some((path) => pathname.startsWith(path));
+  const isAccountPath = accountPath.some((path) => pathname.startsWith(path));
 
-  const isAuthPage = AuthPage.some((page) => pathname === page);
-  const isAccountPage = AccountPage.some((page) => pathname === page);
-
-  if (!isAuthPage) {
+  if (!isAuthPath) {
     return (
       <header
-        className={`${isAccountPage ? "h-12" : "h-16"} w-full flex justify-between items-center xxs:gap-4 sm:gap-0 xxs:px-2 sm:px-5 lg:px-8 sticky bg-steel-night`}
+        className={`${isAccountPath ? "h-12" : "h-16"} w-full flex justify-between items-center xxs:gap-4 sm:gap-0 xxs:px-2 sm:px-5 lg:px-8 bg-steel-night`}
       >
         {/* Tampilan logo dan bar pencarian yang hanya di tampilkan ketika di luar halaman akun */}
-        {!isAccountPage && (
+        {!isAccountPath && (
           <>
             <div aria-label="Icon Logo" className="h-full xxs:w-14 s-extra-large:w-36 sm:w-44 flex justify-center items-center gap-2">
               <svg
@@ -51,7 +49,7 @@ export default function Header(): JSX.Element | undefined {
             </div>
           </>
         )}
-        {isAccountPage && (
+        {isAccountPath && (
           <div className="row-center">
             {pathname.includes("/profile") && (
               <svg
@@ -69,7 +67,7 @@ export default function Header(): JSX.Element | undefined {
         )}
         <nav className="h-full xxs:w-16 s-plus:w-24 s-extra-large:w-36 sm:w-44 flex justify-center items-center s-extra-large:gap-1">
           {/* Menu Wishlist dan Keranjang untuk tampilan mobile */}
-          {width <= 450 && !isAccountPage && (
+          {width <= 450 && !isAccountPath && (
             <div className="flex justify-center items-center gap-2">
               <Link href="/wishlist">
                 <svg className="fill-cloud-white w-7" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

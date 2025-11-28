@@ -3,14 +3,15 @@
 import type { JSX } from "react";
 
 import Link from "next/link";
+import { authPath } from "@/libs/path";
 import { usePathname } from "next/navigation";
 
 export default function Menu(): JSX.Element {
   const pathname = usePathname();
 
-  if (pathname.includes("/auth")) {
-    return <></>;
-  }
+  const isAuthPath = authPath.some((path) => pathname.startsWith(path));
+
+  if (isAuthPath) return <></>;
 
   return (
     <nav className="fixed bottom-0 bg-cloud-white w-full h-16 flex justify-center items-center gap-3 border-[0.01rem] border-steel-night/30 shadow-sm">

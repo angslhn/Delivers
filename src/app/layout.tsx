@@ -1,8 +1,8 @@
 import type { JSX, ReactNode } from "react";
 
 import App from "@/containers/App";
-import Header from "@/components/page/Header";
-import Menu from "@/components/page/Menu";
+import Header from "@/components/ui/Header";
+import Menu from "@/components/ui/Menu";
 import type { Metadata } from "next";
 
 import "@/styles/globals.css";

@@ -1,4 +1,4 @@
-import type { Env } from "@/types/app";
+import type { Env } from "@/types/globals";
 
 export default function env(): Env {
   return {

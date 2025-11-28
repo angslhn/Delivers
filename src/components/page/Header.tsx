@@ -12,9 +12,13 @@ export default function Header(): JSX.Element | undefined {
 
   const [width] = useViewport();
 
-  const isAccountPage = ["/account", "/profile"].some((page) => page === pathname);
+  const AuthPage = ["/email-verification", "/forgot-password", "/login", "/login/verify", "/register", "/reset-password", "/verify-email"];
+  const AccountPage = ["/account", "/profile"];
 
-  if (!pathname.includes("/auth")) {
+  const isAuthPage = AuthPage.some((page) => pathname === page);
+  const isAccountPage = AccountPage.some((page) => pathname === page);
+
+  if (!isAuthPage) {
     return (
       <header
         className={`${isAccountPage ? "h-12" : "h-16"} w-full flex justify-between items-center xxs:gap-4 sm:gap-0 xxs:px-2 sm:px-5 lg:px-8 sticky bg-steel-night`}

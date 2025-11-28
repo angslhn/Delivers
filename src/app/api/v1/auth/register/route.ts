@@ -1,20 +1,22 @@
 import zod from "zod";
 import bcrypt from "bcryptjs";
-import signupSchema from "@/schemas/signup";
+import token from "@/helpers/token";
+import register from "@/schemas/register";
 
 import { User } from "@/models/User";
-
-import { CreateUser } from "@/types/app";
+import { future } from "@/helpers/datetime";
 import { NextRequest, NextResponse } from "next/server";
+
+import type { FormRegister } from "@/types/globals";
 
 export async function POST(request: NextRequest) {
   try {
-    const data: CreateUser = await request.json();
+    const data: FormRegister = await request.json();
 
-    // Cek apakah data valid
-    const validation = signupSchema.safeParse(data);
+    // Cek apakah data registrasi valid
+    const validation = register.safeParse(data);
 
-    // Jika data yang dikirimkan tidak valid
+    // Jika data registrasi yang dikirimkan tidak valid
     if (!validation.success) {
       return NextResponse.json(
         {
@@ -37,7 +39,7 @@ export async function POST(request: NextRequest) {
     const hashed = await bcrypt.hash(validation.data.password, 12);
 
     // Simpan data ke database
-    await User.create({ ...validation.data, password: hashed });
+    await User.create({ ...validation.data, password: hashed, token: token(64), token_expired: future({ minute: 30 }) });
 
     // Berikan respon berhasil
     return NextResponse.json({ message: "Pendaftaran pengguna berhasil, Anda akan dialihkan ke halaman masuk." }, { status: 201 });

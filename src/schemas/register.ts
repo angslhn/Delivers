@@ -1,6 +1,6 @@
 import zod from "zod";
 
-const signupSchema = zod.object({
+const register = zod.object({
   fullname: zod
     .string()
     .trim()
@@ -33,4 +33,4 @@ const signupSchema = zod.object({
     .regex(/[\W_]/, "Wajib mengandung minimal 1 simbol"),
 });
 
-export default signupSchema;
+export default register;

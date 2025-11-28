@@ -6,11 +6,11 @@ import Link from "next/link";
 import { useState } from "react";
 import { ZodError } from "zod";
 
-import signupSchema from "@/schemas/signup";
+import signupSchema from "@/schemas/register";
 import Input from "@/components/element/Input";
 import Loading from "@/components/element/Loading";
 
-import type { FormRegister } from "@/types/app";
+import type { FormRegister } from "@/types/globals";
 import capitalize from "@/helpers/capitalize";
 
 type Field = "fullname" | "email" | "password";
@@ -40,7 +40,7 @@ export default function Register(): JSX.Element {
     };
   }
 
-  async function handleSignup(e: FormEvent<HTMLFormElement>) {
+  async function handleRegister(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     setLoading(true);
@@ -48,7 +48,7 @@ export default function Register(): JSX.Element {
     try {
       const form = signupSchema.parse(data);
 
-      const response: Response = await fetch("/api/v1/auth/signup", {
+      const response: Response = await fetch("/api/v1/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -87,7 +87,7 @@ export default function Register(): JSX.Element {
   return (
     <main className="h-screen w-full row-center">
       <form
-        onSubmit={handleSignup}
+        onSubmit={handleRegister}
         className="xxs:w-11/12 s-plus:w-3/4 s-extra-large:w-2/3 md:w-[23rem] column-center gap-5 px-4 py-4 rounded-xl border border-black/15 shadow"
       >
         <div className="w-full column-center gap-3">

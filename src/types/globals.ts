@@ -42,8 +42,9 @@ export interface FormRegister extends FormLogin {
   fullname: string;
 }
 
-export interface UserData extends FormRegister {
-  id: number;
+export interface UserCreate extends FormRegister {
+  token: string;
+  token_expired: string;
 }
 
-export interface UserDataPacket extends UserData, RowDataPacket {}
+export interface UserDataPacket extends UserCreate, RowDataPacket {}

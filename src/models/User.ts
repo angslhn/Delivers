@@ -2,7 +2,7 @@ import id from "@/helpers/id";
 import { query } from "@/libs/mysql";
 
 import type { ResultSetHeader } from "mysql2";
-import type { CreateUser, UserDataPacket } from "@/types/app";
+import type { UserCreate, UserDataPacket } from "@/types/globals";
 
 export const User = {
   findById: async (id: number): Promise<UserDataPacket | null> => {
@@ -17,12 +17,18 @@ export const User = {
     return users[0] || null;
   },
 
-  create: async (data: CreateUser): Promise<number> => {
+  create: async (data: UserCreate): Promise<number> => {
     const userId = id();
+    const record = { ...data, id: userId };
 
-    const { fullname, email, password } = data;
+    const columns = Object.keys(record);
+    const values = Object.values(record);
 
-    await query<ResultSetHeader>("INSERT INTO users (id, fullname, email, password) VALUES (?, ?, ?, ?)", [userId, fullname, email, password]);
+    const placeholders = Array(columns.length).fill("?").join(",");
+
+    const sql = "INSERT INTO users (" + columns.join(",") + ") VALUES (" + placeholders + ")";
+
+    await query<ResultSetHeader>(sql, values);
 
     return userId;
   },

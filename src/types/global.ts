@@ -14,12 +14,13 @@ export interface Env {
 }
 
 export type Alert = {
-  code: number;
-  show: boolean;
-  text: string | null;
-  confirm?: () => void;
-  continue?: () => void;
-  cancel?: () => void;
+  alertCode: number;
+  alertShow: boolean;
+  alertTitle: string | null;
+  alertDescription: string | null;
+  alertConfirm?: () => void;
+  alertContinue?: () => void;
+  alertCancel?: () => void;
 };
 
 export interface Product {

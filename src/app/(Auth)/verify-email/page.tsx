@@ -6,10 +6,13 @@ import Loading from "@/components/element/Loading";
 import InputOTP from "@/components/element/InputOTP";
 
 import type { JSX, FormEvent } from "react";
+import useAlert from "@/hooks/useAlert";
 
 export default function VerifyEmail(): JSX.Element {
   const [loading, setLoading] = useState<boolean>(false);
   const [otp, setOtp] = useState<string | null>(null);
+
+  const { setAlert } = useAlert();
 
   function handleInputOtp(otp: string) {
     setOtp(otp);
@@ -19,6 +22,13 @@ export default function VerifyEmail(): JSX.Element {
     e.preventDefault();
 
     setLoading(true);
+
+    setAlert((prev) => ({
+      ...prev,
+      alertShow: true,
+      alertTitle: "Verifikasi Berhasil",
+      alertDescription: "Anda sekarang telah berhasil memverifikasi email sebagai pengguna.",
+    }));
   }
 
   return (

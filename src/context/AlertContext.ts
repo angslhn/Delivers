@@ -1,11 +1,23 @@
+"use client";
+
 import { createContext } from "react";
 
-import type { Alert } from "@/types/global";
 import type { Dispatch, SetStateAction } from "react";
+import type { Alert } from "@/types/global";
 
-type AlertContext = {
-  alert: Alert | null;
-  setAlert: Dispatch<SetStateAction<Alert | null>>;
+interface AlertContext extends Alert {
+  setAlert: Dispatch<SetStateAction<Alert>>;
+}
+
+export const defaultValue: AlertContext = {
+  alertCode: 0,
+  alertShow: false,
+  alertTitle: null,
+  alertDescription: null,
+  alertConfirm: undefined,
+  alertContinue: undefined,
+  alertCancel: undefined,
+  setAlert: () => {},
 };
 
-export const AlertContext = createContext<AlertContext | undefined>(undefined);
+export const AlertContext = createContext<AlertContext>(defaultValue);

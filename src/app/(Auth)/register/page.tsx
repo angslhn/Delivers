@@ -5,23 +5,33 @@ import type { ChangeEvent, FormEvent, JSX } from "react";
 import Link from "next/link";
 import { useState } from "react";
 import { ZodError } from "zod";
+import { useRouter } from "next/navigation";
+import { defaultValue } from "@/context/AlertContext";
 
-import signupSchema from "@/schemas/register";
+import useAlert from "@/hooks/useAlert";
+import signupSchema from "@/schemas/auth/register";
 import Input from "@/components/element/Input";
 import Loading from "@/components/element/Loading";
-
-import type { FormRegister } from "@/types/global";
 import capitalize from "@/helpers/capitalize";
-import useAlert from "@/hooks/useAlert";
+
+import type { Register } from "@/types/global";
 
 type Field = "fullname" | "email" | "password";
 
-export default function Register(): JSX.Element {
-  const [data, setData] = useState<FormRegister>({ fullname: "", email: "", password: "" });
+type AuthResponse = {
+  message_type: string;
+  message_description: string;
+  token: string;
+};
+
+export default function RegisterPage(): JSX.Element {
+  const [data, setData] = useState<Register>({ fullname: "", email: "", password: "" });
   const [errors, setErrors] = useState<Record<"fullname" | "email" | "password", string>>();
   const [loading, setLoading] = useState<boolean>(false);
 
-  const { alert, setAlert } = useAlert();
+  const { setAlert } = useAlert();
+
+  const router = useRouter();
 
   function handleInput(field: Field) {
     return function (e: ChangeEvent<HTMLInputElement>) {
@@ -59,9 +69,26 @@ export default function Register(): JSX.Element {
         body: JSON.stringify(form),
       });
 
-      const result = await response.json();
+      const result: AuthResponse = await response.json();
 
-      console.log(result);
+      const alertValue = {
+        alertCode: response.status,
+        alertShow: true,
+        alertTitle: result.message_type,
+        alertDescription: result.message_description,
+      };
+
+      function toVerifyEmail(): void {
+        setAlert(defaultValue);
+        router.push("/verify-email?token=" + result.token);
+      }
+
+      if (response.status === 201) {
+        setAlert({
+          ...alertValue,
+          alertConfirm: () => toVerifyEmail(),
+        });
+      }
     } catch (error) {
       if (error instanceof ZodError) {
         const zodIssues = error.issues;

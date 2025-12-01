@@ -19,7 +19,6 @@ export type Alert = {
   alertTitle: string | null;
   alertDescription: string | null;
   alertConfirm?: () => void;
-  alertContinue?: () => void;
   alertCancel?: () => void;
 };
 
@@ -43,18 +42,49 @@ export interface JSONProduct {
   total: number;
 }
 
-export interface FormLogin {
+export interface Login {
   email: string;
   password: string;
 }
 
-export interface FormRegister extends FormLogin {
+export interface Register {
   fullname: string;
+  email: string;
+  password: string;
 }
 
-export interface UserCreate extends FormRegister {
+export interface VerifyEmail {
+  token: string;
+  otp: string;
+}
+
+export interface UserCreate {
+  id: number;
+  fullname: string;
+  email: string;
+  password: string;
   token: string;
   token_expired: string;
+  otp: string;
+  otp_expired: string;
 }
 
-export interface UserDataPacket extends UserCreate, RowDataPacket {}
+export interface UserData {
+  id?: number;
+  fullname?: string;
+  email?: string;
+  password?: string;
+  phone_number?: string | null;
+  status?: "active" | "pending" | "deleted";
+  role?: "customer" | "seller" | "admin";
+  avatar?: string | null;
+  token?: string | null;
+  token_expired?: string | null;
+  otp?: string | null;
+  otp_expired?: string | null;
+  last_login?: string | null;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface UserDataPacket extends UserData, RowDataPacket {}

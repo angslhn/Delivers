@@ -6,7 +6,7 @@ CREATE TABLE users (
   password CHAR(60) NOT NULL,
   role ENUM('customer', 'seller', 'admin') NOT NULL DEFAULT 'customer',
   status ENUM('active', 'deleted', 'pending') NOT NULL DEFAULT 'pending',
-  avatar_url VARCHAR(255) DEFAULT NULL,
+  avatar VARCHAR(255) DEFAULT NULL,
   otp CHAR(6) DEFAULT NULL,
   otp_expired DATETIME NULL DEFAULT NULL,
   token VARCHAR(255) UNIQUE DEFAULT NULL, 

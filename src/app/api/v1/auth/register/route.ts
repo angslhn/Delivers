@@ -1,53 +1,79 @@
 import zod from "zod";
 import bcrypt from "bcryptjs";
 import token from "@/helpers/token";
-import register from "@/schemas/register";
+import register from "@/schemas/auth/register";
+import otp from "@/helpers/otp";
+import id from "@/helpers/id";
 
 import { User } from "@/model/User";
 import { future } from "@/helpers/datetime";
 import { NextRequest, NextResponse } from "next/server";
 
-import type { FormRegister } from "@/types/global";
+import type { Register } from "@/types/global";
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
-    const data: FormRegister = await request.json();
+    const data: Register = await request.json();
 
-    // Cek apakah data registrasi valid
     const validation = register.safeParse(data);
 
-    // Jika data registrasi yang dikirimkan tidak valid
     if (!validation.success) {
       return NextResponse.json(
         {
-          message: "Data dikirimkan tidak valid",
-          errors: zod.treeifyError(validation.error),
+          message: {
+            title: "Data Tidak Valid",
+            description: "Data yang diterima oleh server tidak valid, proses pendaftaran pengguna tidak dapat di proses.",
+          },
         },
         { status: 400 }
       );
     }
 
-    // Cari pengguna berdasarkan email
     const user = await User.findByEmail(data.email);
 
-    // Jika pengguna dengan email yang dicari telah tersedia maka ia sudah terdaftar
     if (user) {
-      return NextResponse.json({ message: "Email tersebut telah terdaftar" }, { status: 409 });
+      return NextResponse.json(
+        {
+          message: {
+            title: "Email Telah Terdaftar",
+            description: "Email yang digunakan untuk pendaftaran oleh Anda, telah terdaftar silahkan untuk masuk.",
+          },
+        },
+        { status: 409 }
+      );
     }
 
-    // Hashing kata sandi
+    const newToken = token(64);
+
     const hashed = await bcrypt.hash(validation.data.password, 12);
 
-    // Simpan data ke database
-    await User.create({ ...validation.data, password: hashed, token: token(64), token_expired: future({ minute: 30 }) });
+    await User.create({
+      ...validation.data,
+      id: id(),
+      password: hashed,
+      otp: otp(6),
+      otp_expired: future({ minute: 5 }),
+      token: newToken,
+      token_expired: future({ minute: 30 }),
+    });
 
-    // Berikan respon berhasil
-    return NextResponse.json({ message: "Pendaftaran pengguna berhasil, Anda akan dialihkan ke halaman masuk." }, { status: 201 });
+    return NextResponse.json(
+      {
+        message: {
+          title: "Pendaftaran Pengguna Berhasil",
+          description: "Pendaftaran pengguna berhasil, Anda akan dialihkan ke halaman verifikasi email.",
+        },
+        token: newToken,
+      },
+      { status: 201 }
+    );
   } catch (errors) {
     return NextResponse.json(
       {
-        message: "Terjadi kesalahan pada server",
-        details: errors,
+        message: {
+          title: "Kesalahan Pada Server",
+          description: "Sepertinya terjadi kesalahan pada server, permintaan saat ini tidak dapat di proses.",
+        },
       },
       { status: 500 }
     );

@@ -1,6 +1,6 @@
 import type { JSX, ReactNode } from "react";
 
-import App from "@/container/App";
+import App from "@/containers/App";
 import Header from "@/components/ui/Header";
 import Menu from "@/components/ui/Menu";
 import type { Metadata } from "next";

@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { ZodError } from "zod";
 import { useRouter } from "next/navigation";
-import { defaultValue } from "@/context/AlertContext";
+import { defaultAlert } from "@/context/AlertContext";
 
 import signupSchema from "@/schemas/auth/register";
 import parseErrors from "@/helpers/parse-errors";
@@ -14,8 +14,6 @@ import useAlert from "@/hooks/useAlert";
 import Input from "@/components/element/Input";
 import Loading from "@/components/element/Loading";
 import capitalize from "@/helpers/capitalize";
-
-import type { Register } from "@/types/global";
 
 type Field = "fullname" | "email" | "password";
 
@@ -27,9 +25,11 @@ type RegisterResponse = {
   token: string;
 };
 
+const defaultValue = { fullname: "", email: "", password: "" };
+
 export default function RegisterPage(): JSX.Element {
-  const [data, setData] = useState<Register>({ fullname: "", email: "", password: "" });
-  const [errors, setErrors] = useState<Record<"fullname" | "email" | "password", string>>();
+  const [data, setData] = useState<Record<"fullname" | "email" | "password", string>>(defaultValue);
+  const [errors, setErrors] = useState<Record<"fullname" | "email" | "password", string>>(defaultValue);
   const [loading, setLoading] = useState<boolean>(false);
 
   const { setAlert } = useAlert();
@@ -42,16 +42,8 @@ export default function RegisterPage(): JSX.Element {
 
       setData((prev) => ({ ...prev, [field]: value }));
 
-      if (errors && errors[field]) {
-        setErrors((prev) => {
-          if (!prev) return undefined;
-
-          const newErrors = { ...prev };
-
-          delete newErrors[field];
-
-          return newErrors;
-        });
+      if (errors[field] !== "") {
+        setErrors((prev) => ({ ...prev, [field]: "" }));
       }
     };
   }
@@ -62,14 +54,14 @@ export default function RegisterPage(): JSX.Element {
     setLoading(true);
 
     try {
-      const validData = signupSchema.parse(data);
+      const validation = signupSchema.parse(data);
 
       const response: Response = await fetch("/api/v1/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(validData),
+        body: JSON.stringify(validation),
       });
 
       const { message, token }: RegisterResponse = await response.json();
@@ -82,7 +74,7 @@ export default function RegisterPage(): JSX.Element {
       };
 
       function toVerifyEmail(): void {
-        setAlert(defaultValue);
+        setAlert(defaultAlert);
         router.push("/verify-email?token=" + token);
       }
 

@@ -9,15 +9,14 @@ interface AlertContext extends Alert {
   setAlert: Dispatch<SetStateAction<Alert>>;
 }
 
-export const defaultValue: AlertContext = {
+export const defaultAlert: AlertContext = {
   alertCode: 0,
   alertShow: false,
   alertTitle: null,
   alertDescription: null,
   alertConfirm: undefined,
-  alertContinue: undefined,
   alertCancel: undefined,
   setAlert: () => {},
 };
 
-export const AlertContext = createContext<AlertContext>(defaultValue);
+export const AlertContext = createContext<AlertContext>(defaultAlert);

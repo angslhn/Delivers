@@ -1,7 +1,7 @@
 "use client";
 
-import { defaultValue } from "@/context/AlertContext";
 import useAlert from "@/hooks/useAlert";
+import { defaultAlert } from "@/context/AlertContext";
 
 import type { JSX } from "react";
 
@@ -19,7 +19,7 @@ export default function Alert(): JSX.Element {
   })(alertCode);
 
   function handleClose() {
-    setAlert(defaultValue);
+    setAlert(defaultAlert);
   }
 
   const icon = {

@@ -79,12 +79,12 @@ export interface UserData {
   role?: "customer" | "seller" | "admin";
   avatar?: string | null;
   token?: string | null;
-  token_expired?: string | null;
+  token_expired?: Date | null;
   otp?: string | null;
-  otp_expired?: string | null;
-  last_login?: string | null;
-  created_at?: string;
-  updated_at?: string;
+  otp_expired?: Date | null;
+  last_login?: Date | null;
+  created_at?: Date;
+  updated_at?: Date;
 }
 
 export interface UserDataPacket extends UserData, RowDataPacket {}

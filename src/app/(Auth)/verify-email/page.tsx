@@ -1,16 +1,28 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import useAlert from "@/hooks/useAlert";
 
 import Loading from "@/components/element/Loading";
 import InputOTP from "@/components/element/InputOTP";
 
 import type { JSX, FormEvent } from "react";
-import useAlert from "@/hooks/useAlert";
+import { defaultValue } from "@/context/AlertContext";
+
+type VerifyEmailResponse = {
+  message: {
+    title: string;
+    description: string;
+  };
+};
 
 export default function VerifyEmail(): JSX.Element {
   const [loading, setLoading] = useState<boolean>(false);
   const [otp, setOtp] = useState<string | null>(null);
+
+  const router = useRouter();
+  const searchparams = useSearchParams();
 
   const { setAlert } = useAlert();
 
@@ -23,12 +35,41 @@ export default function VerifyEmail(): JSX.Element {
 
     setLoading(true);
 
-    setAlert((prev) => ({
-      ...prev,
-      alertShow: true,
-      alertTitle: "Verifikasi Berhasil",
-      alertDescription: "Anda sekarang telah berhasil memverifikasi email sebagai pengguna.",
-    }));
+    try {
+      const token = searchparams.get("token");
+
+      const response: Response = await fetch("/api/v1/auth/verify-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token, otp }),
+      });
+
+      const { message }: VerifyEmailResponse = await response.json();
+
+      const alertValue = {
+        alertCode: response.status,
+        alertShow: true,
+        alertTitle: message.title,
+        alertDescription: message.description,
+      };
+
+      function toLogin(): void {
+        setAlert(defaultValue);
+        router.push("/login");
+      }
+
+      if (response.status === 201) {
+        setAlert({
+          ...alertValue,
+          alertConfirm: () => toLogin(),
+        });
+      }
+    } catch {
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (

@@ -1,9 +1,8 @@
-import zod from "zod";
+import id from "@/helpers/id";
 import bcrypt from "bcryptjs";
 import token from "@/helpers/token";
 import register from "@/schemas/auth/register";
 import otp from "@/helpers/otp";
-import id from "@/helpers/id";
 
 import { User } from "@/model/User";
 import { future } from "@/helpers/datetime";

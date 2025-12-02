@@ -3,22 +3,29 @@ import { NextRequest, NextResponse } from "next/server";
 import { authPath, protectedPath } from "@/libs/path";
 
 export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  const { pathname, searchParams } = request.nextUrl;
 
   const { cookieName } = env();
 
-  const token = request.cookies.get(cookieName as string)?.value;
+  const cookie = request.cookies.get(cookieName as string)?.value;
 
   const isAuthPage = authPath.some((path) => pathname.startsWith(path));
   const isProtectedPage = protectedPath.some((path) => pathname.startsWith(path));
+  const isValidToken = searchParams.get("token")?.match(/^[a-zA-Z0-9]{64}$/);
 
-  if (token && isAuthPage) {
+  if (cookie && isAuthPage) {
     const homeUrl = new URL("/", request.url);
 
     return NextResponse.redirect(homeUrl);
   }
 
-  if (!token && isProtectedPage) {
+  if (pathname.startsWith("/verify-email") && !isValidToken) {
+    const signinUrl = new URL("/login", request.url);
+
+    return NextResponse.redirect(signinUrl);
+  }
+
+  if (!cookie && isProtectedPage) {
     const signinUrl = new URL("/login", request.url);
 
     return NextResponse.redirect(signinUrl);

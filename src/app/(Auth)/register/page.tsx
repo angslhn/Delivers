@@ -8,8 +8,9 @@ import { ZodError } from "zod";
 import { useRouter } from "next/navigation";
 import { defaultValue } from "@/context/AlertContext";
 
-import useAlert from "@/hooks/useAlert";
 import signupSchema from "@/schemas/auth/register";
+import parseErrors from "@/helpers/parse-errors";
+import useAlert from "@/hooks/useAlert";
 import Input from "@/components/element/Input";
 import Loading from "@/components/element/Loading";
 import capitalize from "@/helpers/capitalize";
@@ -18,9 +19,11 @@ import type { Register } from "@/types/global";
 
 type Field = "fullname" | "email" | "password";
 
-type AuthResponse = {
-  message_type: string;
-  message_description: string;
+type RegisterResponse = {
+  message: {
+    title: string;
+    description: string;
+  };
   token: string;
 };
 
@@ -59,28 +62,28 @@ export default function RegisterPage(): JSX.Element {
     setLoading(true);
 
     try {
-      const form = signupSchema.parse(data);
+      const validData = signupSchema.parse(data);
 
       const response: Response = await fetch("/api/v1/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(form),
+        body: JSON.stringify(validData),
       });
 
-      const result: AuthResponse = await response.json();
+      const { message, token }: RegisterResponse = await response.json();
 
       const alertValue = {
         alertCode: response.status,
         alertShow: true,
-        alertTitle: result.message_type,
-        alertDescription: result.message_description,
+        alertTitle: message.title,
+        alertDescription: message.description,
       };
 
       function toVerifyEmail(): void {
         setAlert(defaultValue);
-        router.push("/verify-email?token=" + result.token);
+        router.push("/verify-email?token=" + token);
       }
 
       if (response.status === 201) {
@@ -91,23 +94,7 @@ export default function RegisterPage(): JSX.Element {
       }
     } catch (error) {
       if (error instanceof ZodError) {
-        const zodIssues = error.issues;
-
-        const errors = zodIssues.reduce(
-          (acc, issue) => {
-            const field = issue.path[0] as string;
-            const message = issue.message;
-
-            if (!acc[field]) {
-              acc[field] = message;
-            }
-
-            return acc;
-          },
-          {} as Record<string, string>
-        );
-
-        return setErrors(errors);
+        setErrors(parseErrors(error));
       }
     } finally {
       setLoading(false);

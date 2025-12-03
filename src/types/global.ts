@@ -10,6 +10,7 @@ export interface Env {
   dbUser: string | undefined;
   dbName: string | undefined;
   dbPassword: string | undefined;
+  jwtSecure: string | undefined;
   cookieName: string | undefined;
 }
 
@@ -64,12 +65,11 @@ export interface UserCreate {
   email: string;
   password: string;
   token: string;
-  token_expired: string;
   otp: string;
-  otp_expired: string;
+  expires_at: string;
 }
 
-export interface UserData {
+export interface UserUpdate {
   id?: number;
   fullname?: string;
   email?: string;
@@ -79,12 +79,25 @@ export interface UserData {
   role?: "customer" | "seller" | "admin";
   avatar?: string | null;
   token?: string | null;
-  token_expired?: Date | null;
   otp?: string | null;
-  otp_expired?: Date | null;
-  last_login?: Date | null;
-  created_at?: Date;
-  updated_at?: Date;
+  expires_at?: string | null;
+  login_at?: string | null;
+}
+export interface UserData {
+  id: number;
+  fullname: string;
+  email: string;
+  password: string;
+  phone_number: string | null;
+  status: "active" | "pending" | "deleted";
+  role: "customer" | "seller" | "admin";
+  avatar: string | null;
+  token: string | null;
+  otp: string | null;
+  expires_at: Date | null;
+  login_at: Date | null;
+  created_at: Date;
+  updated_at: Date;
 }
 
 export interface UserDataPacket extends UserData, RowDataPacket {}

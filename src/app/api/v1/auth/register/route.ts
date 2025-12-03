@@ -1,12 +1,12 @@
 import id from "@/helpers/id";
+import otp from "@/helpers/otp";
 import bcrypt from "bcryptjs";
 import token from "@/helpers/token";
 import register from "@/schemas/auth/register";
-import otp from "@/helpers/otp";
 
 import { User } from "@/model/User";
-import { future } from "@/helpers/datetime";
 import { NextRequest, NextResponse } from "next/server";
+import { future } from "@/helpers/datetime";
 
 import type { Register } from "@/types/global";
 
@@ -42,6 +42,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       );
     }
 
+    const newOtp = otp(6);
     const newToken = token(64);
 
     const hashed = await bcrypt.hash(validation.data.password, 12);
@@ -50,10 +51,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       ...validation.data,
       id: id(),
       password: hashed,
-      otp: otp(6),
-      otp_expired: future({ minute: 5 }),
+      otp: newOtp,
       token: newToken,
-      token_expired: future({ minute: 30 }),
+      expires_at: future({ minute: 10 }),
     });
 
     return NextResponse.json(

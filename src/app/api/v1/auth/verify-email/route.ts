@@ -1,7 +1,7 @@
 import verifyEmail from "@/schemas/auth/verify-email";
-import { NextRequest, NextResponse } from "next/server";
 
 import { User } from "@/model/User";
+import { NextRequest, NextResponse } from "next/server";
 
 import type { UserData, VerifyEmail } from "@/types/global";
 
@@ -61,32 +61,21 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    const otpExpired = !user.otp_expired || Date.now() > user.otp_expired.getTime();
+    const isExpired = !user.expires_at || Date.now() > user.expires_at.getTime();
 
-    if (otpExpired) {
-      await User.update({ id: user.id, otp: null, otp_expired: null });
-
-      return NextResponse.json(
-        {
-          message: {
-            title: "Kode Verifikasi Kadaluwarsa",
-            description: "Kode verifikasi yang Anda gunakan telah kadaluwarsa, silahkan untuk meminta kirim ulang.",
-          },
-        },
-        { status: 400 }
-      );
-    }
-
-    const tokenExpired = !user.token_expired || Date.now() > user.token_expired.getTime();
-
-    if (tokenExpired) {
-      await User.update({ id: user.id, token: null, token_expired: null });
+    if (isExpired) {
+      await User.update({
+        id: user.id,
+        otp: null,
+        token: null,
+        expires_at: null,
+      });
 
       return NextResponse.json(
         {
           message: {
-            title: "Token Telah Kadaluwarsa",
-            description: "Token untuk verifikasi telah kadaluwarsa, silahkan untuk masuk terlebih dahulu untuk memperbarui token.",
+            title: "Sesi Verifikasi Berakhir",
+            description: "Saat ini waktu verifikasi email telah habis. Silakan minta kode baru.",
           },
         },
         { status: 400 }
@@ -105,7 +94,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    await User.update({ id: user.id, status: "active", otp: null, otp_expired: null, token: null, token_expired: null });
+    await User.update({ id: user.id, status: "active", otp: null, token: null, expires_at: null });
 
     return NextResponse.json(
       {

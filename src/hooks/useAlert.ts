@@ -7,7 +7,7 @@ export default function useAlert() {
   const context = useContext(AlertContext);
 
   if (context === undefined) {
-    throw new Error("useAlert must be used within a AlertProvider");
+    throw new Error("useAlert harus digunakan didalam AlertProvider");
   }
 
   return context;

@@ -11,6 +11,8 @@ import Loading from "@/components/element/Loading";
 import parseErrors from "@/helpers/parse-errors";
 
 import type { FormEvent, JSX } from "react";
+import { defaultAlert } from "@/context/AlertContext";
+import { useRouter } from "next/navigation";
 
 type Field = "email" | "password";
 
@@ -19,6 +21,7 @@ type LoginResponse = {
     title: string;
     description: string;
   };
+  token?: string;
 };
 
 const defaultValue = { email: "", password: "" };
@@ -27,6 +30,8 @@ export default function LoginPage(): JSX.Element {
   const [data, setData] = useState<Record<"email" | "password", string>>(defaultValue);
   const [errors, setErrors] = useState<Record<"email" | "password", string>>(defaultValue);
   const [loading, setLoading] = useState<boolean>(false);
+
+  const router = useRouter();
 
   const { setAlert } = useAlert();
 
@@ -54,7 +59,26 @@ export default function LoginPage(): JSX.Element {
         body: JSON.stringify(data),
       });
 
-      const { message }: LoginResponse = await response.json();
+      const { message, token }: LoginResponse = await response.json();
+
+      const alertValue = {
+        alertCode: response.status,
+        alertShow: true,
+        alertTitle: message.title,
+        alertDescription: message.description,
+      };
+
+      function toHome(): void {
+        setAlert(defaultAlert);
+        router.push("/");
+      }
+
+      if (response.status === 200) {
+        setAlert({
+          ...alertValue,
+          alertConfirm: () => toHome(),
+        });
+      }
 
       if (response.status === 404) {
         setErrors((prev) => ({ ...prev, email: message.description }));

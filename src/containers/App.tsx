@@ -1,20 +1,25 @@
-"use client";
+import { cookies } from "next/headers";
+
+import env from "@/config/env";
+import { verifyToken } from "@/helpers/auth";
+
+import Page from "@/containers/Page";
 
 import type { JSX, ReactNode } from "react";
+import type { UserPayload } from "@/types/global";
 
-import Provider from "@/containers/Provider";
-import useViewport from "@/hooks/useViewport";
+export default async function App({ children }: { children: ReactNode }): Promise<JSX.Element> {
+  const cookieStore = await cookies();
 
-import ComingSoon from "@/errors/ComingSoon";
+  const { cookieName } = env();
 
-export default function App({ children }: { children: ReactNode }): JSX.Element {
-  const [width] = useViewport();
+  const token = cookieStore.get(cookieName as string)?.value;
 
-  const isMobile = width <= 450 && width >= 300;
+  let user: UserPayload | null = null;
 
-  if (!isMobile) {
-    return <ComingSoon />;
+  if (token) {
+    user = await verifyToken(token);
   }
 
-  return <Provider>{children}</Provider>;
+  return <Page token={user}>{children}</Page>;
 }

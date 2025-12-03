@@ -78,11 +78,25 @@ export default function RegisterPage(): JSX.Element {
         router.push("/verify-email?token=" + token);
       }
 
+      function toLogin(): void {
+        setAlert(defaultAlert);
+        router.push("/login");
+      }
+
       if (response.status === 201) {
         setAlert({
           ...alertValue,
           alertConfirm: () => toVerifyEmail(),
         });
+        return;
+      }
+
+      if (response.status === 409) {
+        setAlert({
+          ...alertValue,
+          alertConfirm: () => toLogin(),
+        });
+        return;
       }
     } catch (error) {
       if (error instanceof ZodError) {

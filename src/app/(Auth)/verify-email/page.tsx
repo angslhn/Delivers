@@ -2,13 +2,13 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { defaultAlert } from "@/context/AlertContext";
 import useAlert from "@/hooks/useAlert";
 
 import Loading from "@/components/element/Loading";
 import InputOTP from "@/components/element/InputOTP";
 
 import type { JSX, FormEvent } from "react";
-import { defaultValue } from "@/context/AlertContext";
 
 type VerifyEmailResponse = {
   message: {
@@ -16,9 +16,10 @@ type VerifyEmailResponse = {
     description: string;
   };
 };
+const [loading, setLoading] = useState<boolean>(false);
 
 export default function VerifyEmail(): JSX.Element {
-  const [loading, setLoading] = useState<boolean>(false);
+  const [errors, setErrors] = useState<Record<"otp", string>>({ otp: "" });
   const [otp, setOtp] = useState<string | null>(null);
 
   const router = useRouter();
@@ -56,11 +57,13 @@ export default function VerifyEmail(): JSX.Element {
       };
 
       function toLogin(): void {
-        setAlert(defaultValue);
+        setAlert(defaultAlert);
         router.push("/login");
       }
 
-      if (response.status === 201) {
+      const toLoginCode = [200, 400, 403, 409, 500];
+
+      if (toLoginCode.includes(response.status)) {
         setAlert({
           ...alertValue,
           alertConfirm: () => toLogin(),

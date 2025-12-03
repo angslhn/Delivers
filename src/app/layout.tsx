@@ -1,12 +1,13 @@
 import type { JSX, ReactNode } from "react";
 
 import App from "@/containers/App";
+import Alert from "@/components/element/Alert";
 import Header from "@/components/ui/Header";
 import Menu from "@/components/ui/Menu";
+
 import type { Metadata } from "next";
 
 import "@/styles/globals.css";
-import Alert from "@/components/element/Alert";
 
 export const metadata: Metadata = {
   title: "Delivers",

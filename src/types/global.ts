@@ -100,4 +100,13 @@ export interface UserData {
   updated_at: Date;
 }
 
+export interface UserPayload {
+  id: number;
+  fullname: string;
+  email: string;
+  phone_number: string | null;
+  avatar: string;
+  role: "customer" | "seller" | "admin";
+}
+
 export interface UserDataPacket extends UserData, RowDataPacket {}

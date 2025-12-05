@@ -4,14 +4,16 @@ import type { JSX } from "react";
 
 import Link from "next/link";
 import Image from "next/image";
+import useAuth from "@/hooks/useAuth";
+import blank from "@/assets/images/blank.png";
 import { useRouter } from "next/navigation";
 
-import blank from "@/assets/images/blank.png";
+import type { UserPayload } from "@/types/global";
 
 export default function Account(): JSX.Element {
   const router = useRouter();
 
-  const token = false;
+  const token: UserPayload | null = useAuth();
 
   function handleNavigate(path: string) {
     return () => router.push(path);
@@ -41,7 +43,7 @@ export default function Account(): JSX.Element {
         {token && (
           <div className="w-full row-left gap-5 mx-6">
             <Image className="w-12 rounded-full" src={blank} alt="User" />
-            <span className="text-steel-night font-semibold select-none">Aang Solihin</span>
+            <span className="text-steel-night font-semibold select-none">{token.fullname}</span>
           </div>
         )}
       </div>

@@ -9,14 +9,9 @@ import firstBanner from "@/assets/images/banner_1.jpg";
 import { price, sold, title } from "@/helpers/product";
 
 import type { JSONProduct, Product } from "@/types/global";
-import useAuth from "@/hooks/useAuth";
 
 export default function Home(): JSX.Element {
   const [products, setProducts] = useState<[Product]>();
-
-  const data = useAuth();
-
-  console.log(data);
 
   useEffect(() => {
     async function getProduct(): Promise<void> {

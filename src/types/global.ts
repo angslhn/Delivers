@@ -1,4 +1,5 @@
-import { RowDataPacket } from "mysql2";
+import type { RowDataPacket } from "mysql2";
+import type { Dispatch, SetStateAction } from "react";
 
 export interface Token {
   data: string;

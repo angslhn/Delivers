@@ -9,7 +9,7 @@ export default function Alert(): JSX.Element {
   const { alertCode, alertShow, alertTitle, alertDescription, alertCancel, alertConfirm, setAlert } = useAlert();
 
   const successCodes = [200, 201, 204];
-  const warningCodes = [400, 401, 403, 404, 409, 422, 429];
+  const warningCodes = [0, 400, 401, 403, 404, 409, 422, 429];
   const errorCodes = [500, 502, 503, 504];
 
   const type = ((alertCode: number) => {
@@ -32,8 +32,21 @@ export default function Alert(): JSX.Element {
         </g>
       </svg>
     ),
-    warning: <></>,
-    error: <></>,
+    warning: (
+      <svg className="w-8 z-10" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12.5 2.2a10.3 10.3 0 1 0 10.3 10.3A10.299 10.299 0 0 0 12.5 2.2zM12 7h1v7h-1zm.5 10.5a1 1 0 1 1 1-1 1.002 1.002 0 0 1-1 1z" />
+        <path fill="none" d="M0 0h24v24H0z" />
+      </svg>
+    ),
+    error: (
+      <svg className="w-8 z-10" viewBox="0 0 32 32">
+        <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
+          <g transform="translate(-570.000000, -1089.000000)" fill="#000000">
+            <path d="M591.657,1109.24 C592.048,1109.63 592.048,1110.27 591.657,1110.66 C591.267,1111.05 590.633,1111.05 590.242,1110.66 L586.006,1106.42 L581.74,1110.69 C581.346,1111.08 580.708,1111.08 580.314,1110.69 C579.921,1110.29 579.921,1109.65 580.314,1109.26 L584.58,1104.99 L580.344,1100.76 C579.953,1100.37 579.953,1099.73 580.344,1099.34 C580.733,1098.95 581.367,1098.95 581.758,1099.34 L585.994,1103.58 L590.292,1099.28 C590.686,1098.89 591.323,1098.89 591.717,1099.28 C592.11,1099.68 592.11,1100.31 591.717,1100.71 L587.42,1105.01 L591.657,1109.24 L591.657,1109.24 Z M586,1089 C577.163,1089 570,1096.16 570,1105 C570,1113.84 577.163,1121 586,1121 C594.837,1121 602,1113.84 602,1105 C602,1096.16 594.837,1089 586,1089 L586,1089 Z"></path>
+          </g>
+        </g>
+      </svg>
+    ),
   };
 
   return (
@@ -61,8 +74,13 @@ export default function Alert(): JSX.Element {
         <span className="w-full text-center text-[0.8rem] text-steel-night">{alertDescription}</span>
         <div className="row-center gap-2">
           <button onClick={alertConfirm} className="w-24 h-8 bg-steel-night text-cloud-white rounded-md text-sm">
-            Confirm
+            Konfirmasi
           </button>
+          {alertCancel && (
+            <button onClick={alertCancel} className="w-24 h-8 bg-steel-night text-cloud-white rounded-md text-sm">
+              Batal
+            </button>
+          )}
         </div>
       </div>
     </div>

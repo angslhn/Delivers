@@ -5,7 +5,7 @@ import { createContext } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import type { Alert } from "@/types/global";
 
-interface AlertContext extends Alert {
+export interface AlertContext extends Alert {
   setAlert: Dispatch<SetStateAction<Alert>>;
 }
 

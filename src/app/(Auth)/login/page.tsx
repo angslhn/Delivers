@@ -70,7 +70,10 @@ export default function LoginPage(): JSX.Element {
 
       function toHome(): void {
         setAlert(defaultAlert);
-        router.push("/");
+
+        router.push("/account");
+
+        router.refresh();
       }
 
       if (response.status === 200) {

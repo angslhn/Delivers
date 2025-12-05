@@ -1,19 +1,67 @@
+"use client";
+
 import type { JSX } from "react";
 
 import Link from "next/link";
 import Image from "next/image";
-
 import blank from "@/assets/images/blank.png";
+import useAuth from "@/hooks/useAuth";
+import useAlert from "@/hooks/useAlert";
+import logout from "@/functions/logout";
+
+import { useRouter } from "next/navigation";
+import { defaultAlert } from "@/context/AlertContext";
+
+import type { UserPayload } from "@/types/global";
 
 export default function Profile(): JSX.Element {
+  const token: UserPayload | null = useAuth();
+
+  const router = useRouter();
+
+  const { setAlert } = useAlert();
+
+  const alertValue = {
+    alertCode: 0,
+    alertShow: true,
+    alertTitle: "Yakin Akan Keluar?",
+    alertDescription: "Anda perlu login kembali untuk melanjutkan belanja atau melihat status pesanan.",
+  };
+
+  async function onConfirm() {
+    setAlert({
+      alertCode: 204,
+      alertShow: true,
+      alertTitle: "Berhasil Keluar",
+      alertDescription: "Sampai jumpa kembali! Kami tunggu kunjungan Anda selanjutnya.",
+      alertConfirm: () => {
+        setAlert(defaultAlert);
+      },
+    });
+
+    await logout();
+
+    router.refresh();
+  }
+
+  async function handleLogout() {
+    setAlert({
+      ...alertValue,
+      alertConfirm: () => onConfirm(),
+      alertCancel: () => {
+        setAlert(defaultAlert);
+      },
+    });
+  }
+
   return (
     <main className="w-full overflow-hidden">
       <div className="w-full my-4 row-center gap-3">
         <div className="w-full row-left gap-5 mx-6">
-          <Image className="w-12 rounded-full" src={blank} alt="User" />
+          <Image className="w-12 rounded-full" src={token?.avatar || blank} alt="User" />
           <div className="column-left">
-            <span className="text-steel-night font-semibold select-none">Aang Solihin</span>
-            <span className="text-steel-night text-xs select-none">angslhn@email.com</span>
+            <span className="text-steel-night font-semibold select-none">{token?.fullname}</span>
+            <span className="text-steel-night text-xs select-none">{token?.email}</span>
           </div>
         </div>
       </div>
@@ -65,15 +113,17 @@ export default function Profile(): JSX.Element {
               <span className="text-xs select-none">Tampilkan pemberitahuan yang diterima Anda</span>
             </div>
           </Link>
-          <Link href="/logout" className="row-center gap-3">
+          <div className="row-center gap-3">
             <svg className="ml-0.5 w-5 fill-steel-night" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
               <path d="M505 273c9.4-9.4 9.4-24.6 0-33.9L377 111c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l87 87L184 232c-13.3 0-24 10.7-24 24s10.7 24 24 24l246.1 0-87 87c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0L505 273zM168 80c13.3 0 24-10.7 24-24s-10.7-24-24-24L88 32C39.4 32 0 71.4 0 120L0 392c0 48.6 39.4 88 88 88l80 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-80 0c-22.1 0-40-17.9-40-40l0-272c0-22.1 17.9-40 40-40l80 0z" />
             </svg>
             <div className="column-left">
-              <span className="ml-0.5 font-semibold text-[0.9rem] select-none">Keluar</span>
+              <button type="button" onClick={handleLogout} className="ml-0.5 font-semibold text-[0.9rem] select-none">
+                Keluar
+              </button>
               <span className="ml-0.5 text-xs select-none">Keluar dari sesi akun saat ini</span>
             </div>
-          </Link>
+          </div>
         </div>
       </div>
     </main>

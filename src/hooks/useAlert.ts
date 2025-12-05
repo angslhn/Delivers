@@ -3,7 +3,7 @@
 import { useContext } from "react";
 import { AlertContext } from "@/context/AlertContext";
 
-export default function useAlert() {
+export default function useAlert(): AlertContext {
   const context = useContext(AlertContext);
 
   if (context === undefined) {

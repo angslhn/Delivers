@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 type Viewport = [number, number];
 
-export default function useViewport(): Viewport {
+export function useViewport(): Viewport {
   const [viewport, setViewport] = useState<Viewport>([0, 0]);
 
   useEffect(() => {

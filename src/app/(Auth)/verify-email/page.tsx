@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { defaultAlert } from "@/context/AlertContext";
-import useAlert from "@/hooks/useAlert";
+import { useAlert, defaultAlert } from "@/hooks/Alert";
 
 import Loading from "@/components/element/Loading";
 import InputOTP from "@/components/element/InputOTP";
@@ -16,10 +15,9 @@ type VerifyEmailResponse = {
     description: string;
   };
 };
-const [loading, setLoading] = useState<boolean>(false);
 
 export default function VerifyEmail(): JSX.Element {
-  const [errors, setErrors] = useState<Record<"otp", string>>({ otp: "" });
+  const [loading, setLoading] = useState<boolean>(false);
   const [otp, setOtp] = useState<string | null>(null);
 
   const router = useRouter();
@@ -39,7 +37,7 @@ export default function VerifyEmail(): JSX.Element {
     try {
       const token = searchparams.get("token");
 
-      const response: Response = await fetch("/api/v1/auth/verify-email", {
+      const response: Response = await fetch("/api/v1/auth/verify/email", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -58,10 +56,20 @@ export default function VerifyEmail(): JSX.Element {
 
       function toLogin(): void {
         setAlert(defaultAlert);
+
         router.push("/login");
       }
 
-      const toLoginCode = [200, 400, 403, 409, 500];
+      const toLoginCode = [200, 403, 409, 500];
+
+      if (response.status == 400) {
+        setAlert({
+          ...alertValue,
+          alertConfirm: () => {
+            setAlert(defaultAlert);
+          },
+        });
+      }
 
       if (toLoginCode.includes(response.status)) {
         setAlert({

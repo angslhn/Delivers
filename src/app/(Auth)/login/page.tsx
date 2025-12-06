@@ -1,18 +1,17 @@
 "use client";
 
-import { useState, ChangeEvent } from "react";
-import { ZodError } from "zod";
-
 import Link from "next/link";
 
-import useAlert from "@/hooks/useAlert";
+import { ZodError } from "zod";
+import { useRouter } from "next/navigation";
+import { useState, ChangeEvent } from "react";
+import { useAlert, defaultAlert } from "@/hooks/Alert";
+
 import Input from "@/components/element/Input";
 import Loading from "@/components/element/Loading";
 import parseErrors from "@/helpers/parse-errors";
 
 import type { FormEvent, JSX } from "react";
-import { defaultAlert } from "@/context/AlertContext";
-import { useRouter } from "next/navigation";
 
 type Field = "email" | "password";
 
@@ -31,9 +30,9 @@ export default function LoginPage(): JSX.Element {
   const [errors, setErrors] = useState<Record<"email" | "password", string>>(defaultValue);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const router = useRouter();
-
   const { setAlert } = useAlert();
+
+  const router = useRouter();
 
   function handleInput(field: Field) {
     return function (e: ChangeEvent<HTMLInputElement>) {
@@ -68,23 +67,30 @@ export default function LoginPage(): JSX.Element {
         alertDescription: message.description,
       };
 
-      function toHome(): void {
-        setAlert(defaultAlert);
+      const toVerifyCodes = [200, 403];
 
-        router.push("/account");
+      if (toVerifyCodes.includes(response.status)) {
+        const page = { "200": "/login/verify", "403": "/verify-email" };
 
-        router.refresh();
-      }
-
-      if (response.status === 200) {
         setAlert({
           ...alertValue,
-          alertConfirm: () => toHome(),
+          alertConfirm: () => {
+            router.push(page[String(response.status) as "200" | "403"] + "?token=" + token);
+
+            setAlert(defaultAlert);
+          },
         });
+
+        return;
       }
 
-      if (response.status === 404) {
-        setErrors((prev) => ({ ...prev, email: message.description }));
+      const fieldErrors = [401, 404];
+
+      if (fieldErrors.includes(response.status)) {
+        const field: Record<"401" | "404", Field> = { "401": "password", "404": "email" };
+
+        setErrors((prev) => ({ ...prev, [field[String(response.status) as "401" | "404"]]: message.description }));
+
         return;
       }
     } catch (error) {

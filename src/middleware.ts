@@ -9,9 +9,11 @@ export function middleware(request: NextRequest) {
 
   const cookie = request.cookies.get(cookieName as string)?.value;
 
+  const token = searchParams.get("token")?.match(/^[a-zA-Z0-9]{64}$/);
+
   const isAuthPage = authPath.some((path) => pathname.startsWith(path));
   const isProtectedPage = protectedPath.some((path) => pathname.startsWith(path));
-  const isValidToken = searchParams.get("token")?.match(/^[a-zA-Z0-9]{64}$/);
+  const isVerifyPage = ["/verify-email", "/login/verify"].some((path) => pathname.startsWith(path));
 
   if (cookie && isAuthPage) {
     const homeUrl = new URL("/", request.url);
@@ -19,7 +21,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(homeUrl);
   }
 
-  if (pathname.startsWith("/verify-email") && !isValidToken) {
+  if (isVerifyPage && !token) {
     const signinUrl = new URL("/login", request.url);
 
     return NextResponse.redirect(signinUrl);

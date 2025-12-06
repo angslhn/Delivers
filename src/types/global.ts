@@ -55,7 +55,7 @@ export interface Register {
   password: string;
 }
 
-export interface VerifyEmail {
+export interface Verify {
   token: string;
   otp: string;
 }

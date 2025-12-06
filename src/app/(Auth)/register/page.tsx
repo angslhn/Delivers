@@ -6,16 +6,16 @@ import Link from "next/link";
 import { useState } from "react";
 import { ZodError } from "zod";
 import { useRouter } from "next/navigation";
-import { defaultAlert } from "@/context/AlertContext";
-
+import { useAlert, defaultAlert } from "@/hooks/Alert";
 import signupSchema from "@/schemas/auth/register";
+
 import parseErrors from "@/helpers/parse-errors";
-import useAlert from "@/hooks/useAlert";
-import Input from "@/components/element/Input";
-import Loading from "@/components/element/Loading";
 import capitalize from "@/helpers/capitalize";
 
-type Field = "fullname" | "email" | "password";
+import Input from "@/components/element/Input";
+import Loading from "@/components/element/Loading";
+
+type Input = "fullname" | "email" | "password";
 
 type RegisterResponse = {
   message: {
@@ -25,18 +25,20 @@ type RegisterResponse = {
   token: string;
 };
 
+type Field = Record<string, string>;
+
 const defaultValue = { fullname: "", email: "", password: "" };
 
 export default function RegisterPage(): JSX.Element {
-  const [data, setData] = useState<Record<"fullname" | "email" | "password", string>>(defaultValue);
-  const [errors, setErrors] = useState<Record<"fullname" | "email" | "password", string>>(defaultValue);
+  const [data, setData] = useState<Field>(defaultValue);
+  const [errors, setErrors] = useState<Field>(defaultValue);
   const [loading, setLoading] = useState<boolean>(false);
 
   const { setAlert } = useAlert();
 
   const router = useRouter();
 
-  function handleInput(field: Field) {
+  function handleInput(field: Input) {
     return function (e: ChangeEvent<HTMLInputElement>) {
       const value = field !== "fullname" ? e.target.value : capitalize(e.target.value);
 
@@ -73,20 +75,14 @@ export default function RegisterPage(): JSX.Element {
         alertDescription: message.description,
       };
 
-      function toVerifyEmail(): void {
-        setAlert(defaultAlert);
-        router.push("/verify-email?token=" + token);
-      }
-
-      function toLogin(): void {
-        setAlert(defaultAlert);
-        router.push("/login");
-      }
-
       if (response.status === 201) {
         setAlert({
           ...alertValue,
-          alertConfirm: () => toVerifyEmail(),
+          alertConfirm: () => {
+            setAlert(defaultAlert);
+
+            router.push("/verify-email?token=" + token);
+          },
         });
         return;
       }
@@ -94,7 +90,11 @@ export default function RegisterPage(): JSX.Element {
       if (response.status === 409) {
         setAlert({
           ...alertValue,
-          alertConfirm: () => toLogin(),
+          alertConfirm: () => {
+            setAlert(defaultAlert);
+
+            router.push("/login");
+          },
         });
         return;
       }

@@ -4,7 +4,7 @@ import type { JSX, ReactNode } from "react";
 
 import Provider from "@/containers/Provider";
 import ComingSoon from "@/errors/ComingSoon";
-import useViewport from "@/hooks/useViewport";
+import { useViewport } from "@/hooks/Viewport";
 
 import type { UserPayload } from "@/types/global";
 

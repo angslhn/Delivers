@@ -5,12 +5,11 @@ import type { JSX } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import blank from "@/assets/images/blank.png";
-import useAuth from "@/hooks/useAuth";
-import useAlert from "@/hooks/useAlert";
+import { useAuth } from "@/hooks/Auth";
+import { useAlert, defaultAlert } from "@/hooks/Alert";
 import logout from "@/functions/logout";
 
 import { useRouter } from "next/navigation";
-import { defaultAlert } from "@/context/AlertContext";
 
 import type { UserPayload } from "@/types/global";
 

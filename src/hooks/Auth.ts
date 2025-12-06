@@ -4,7 +4,7 @@ import { useContext } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import { UserPayload } from "@/types/global";
 
-export default function useAuth(): UserPayload | null {
+export function useAuth(): UserPayload | null {
   const context = useContext(AuthContext);
 
   if (context === undefined) {

@@ -3,12 +3,14 @@
 import type { ChangeEvent, FormEvent, JSX } from "react";
 
 import Link from "next/link";
+
 import { useState } from "react";
 import { ZodError } from "zod";
 import { useRouter } from "next/navigation";
-import { useAlert, defaultAlert } from "@/hooks/Alert";
-import signupSchema from "@/schemas/auth/register";
+import { useAlert } from "@/hooks/Alert";
+import { defaultAlert } from "@/context/AlertContext";
 
+import signupSchema from "@/schemas/auth/register";
 import parseErrors from "@/helpers/parse-errors";
 import capitalize from "@/helpers/capitalize";
 
@@ -125,7 +127,7 @@ export default function RegisterPage(): JSX.Element {
             Bergabung sekarang! Dan dapatkan beberapa pengalaman terbaik saat berbelanja di Delivers.
           </span>
         </div>
-        <div className="w-full column-center gap-1">
+        <div className="w-full column-center">
           <Input label="Nama Lengkap" name="fullname" onChange={handleInput("fullname")} value={data.fullname} invalid={errors?.fullname} />
           <Input label="Email" name="email" onChange={handleInput("email")} value={data.email} invalid={errors?.email} />
           <Input label="Kata Sandi" name="password" onChange={handleInput("password")} value={data.password} invalid={errors?.password} />

@@ -3,11 +3,11 @@ import verifyEmail from "@/schemas/auth/verify-email";
 import { User } from "@/model/User";
 import { NextRequest, NextResponse } from "next/server";
 
-import type { UserData, VerifyEmail } from "@/types/global";
+import type { UserData, Verify } from "@/types/global";
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
-    const data: VerifyEmail = await request.json();
+    const data: Verify = await request.json();
 
     const validation = verifyEmail.safeParse(data);
 

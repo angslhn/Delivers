@@ -60,6 +60,10 @@ export interface Verify {
   otp: string;
 }
 
+export interface Resend {
+  token: string;
+}
+
 export interface UserCreate {
   id: number;
   fullname: string;

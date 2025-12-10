@@ -1,6 +1,7 @@
 "use client";
 
-import { useAlert, defaultAlert } from "@/hooks/Alert";
+import { useAlert } from "@/hooks/Alert";
+import { defaultAlert } from "@/context/AlertContext";
 
 import type { JSX } from "react";
 

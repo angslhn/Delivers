@@ -5,10 +5,10 @@ import type { JSX } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import blank from "@/assets/images/blank.png";
-import { useAuth } from "@/hooks/Auth";
-import { useAlert, defaultAlert } from "@/hooks/Alert";
 import logout from "@/functions/logout";
-
+import { useAuth } from "@/hooks/Auth";
+import { useAlert } from "@/hooks/Alert";
+import { defaultAlert } from "@/context/AlertContext";
 import { useRouter } from "next/navigation";
 
 import type { UserPayload } from "@/types/global";

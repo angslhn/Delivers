@@ -1,23 +1,36 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useAlert, defaultAlert } from "@/hooks/Alert";
+import { defaultAlert } from "@/context/AlertContext";
+import { useAlert } from "@/hooks/Alert";
 
 import Loading from "@/components/element/Loading";
 import InputOTP from "@/components/element/InputOTP";
 
 import type { JSX, FormEvent } from "react";
+import Timer from "@/components/element/Timer";
 
 type VerifyEmailResponse = {
   message: {
     title: string;
     description: string;
   };
+  email: string;
 };
 
-export default function VerifyEmail(): JSX.Element {
+type ResendResponse = {
+  message: {
+    title: string;
+    description: string;
+  };
+  token: string;
+  delay_request: number;
+};
+
+export default function VerifyEmailPage(): JSX.Element {
   const [loading, setLoading] = useState<boolean>(false);
+  const [timer, setTimer] = useState<{ set: boolean; minute: number }>({ set: false, minute: 0 });
   const [otp, setOtp] = useState<string | null>(null);
 
   const router = useRouter();
@@ -29,7 +42,7 @@ export default function VerifyEmail(): JSX.Element {
     setOtp(otp);
   }
 
-  async function handleVerify(e: FormEvent<HTMLFormElement>) {
+  async function handleVerify(e: FormEvent<HTMLFormElement>): Promise<void> {
     e.preventDefault();
 
     setLoading(true);
@@ -83,11 +96,71 @@ export default function VerifyEmail(): JSX.Element {
     }
   }
 
+  async function handleResend() {
+    try {
+      const response: Response = await fetch("/api/v1/auth/resend", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token: searchparams.get("token") }),
+      });
+
+      const { message, token, delay_request }: ResendResponse = await response.json();
+
+      const alertValue = {
+        alertCode: response.status,
+        alertShow: true,
+        alertTitle: message.title,
+        alertDescription: message.description,
+      };
+
+      if (response.status === 200) {
+        setAlert({
+          ...alertValue,
+          alertConfirm: () => {
+            setAlert(defaultAlert);
+
+            router.push("/verify-email?token=" + token);
+
+            setTimer({ set: true, minute: delay_request });
+          },
+        });
+
+        return;
+      }
+
+      if (response.status === 404) {
+        setAlert({
+          ...alertValue,
+          alertConfirm: () => {
+            setAlert(defaultAlert);
+
+            router.push("/login");
+          },
+        });
+      }
+    } catch {}
+  }
+
+  useEffect(() => {
+    if (!timer) return;
+
+    const timeout = setTimeout(
+      () => {
+        setTimer({ set: false, minute: 0 });
+      },
+      timer.minute * 60 * 1000
+    );
+
+    return () => clearTimeout(timeout);
+  }, [timer]);
+
   return (
     <main className="h-screen w-full row-center">
       <form
         onSubmit={handleVerify}
-        className="xxs:w-11/12 s-plus:w-3/4 s-extra-large:w-2/3 md:w-[23rem] column-center gap-5 px-4 py-4 rounded-xl border border-black/15 shadow"
+        className="xxs:w-11/12 s-plus:w-3/4 s-extra-large:w-2/3 md:w-[23rem] column-center gap-2 px-4 py-4 rounded-xl border border-black/15 shadow"
       >
         <div className="w-full column-center gap-3">
           <div className="row-center gap-2">
@@ -98,15 +171,28 @@ export default function VerifyEmail(): JSX.Element {
             <h1 className="font-bold text-2xl text-steel-night select-none">Delivers.</h1>
           </div>
           <span className="font-normal text-center text-[0.9rem] text-steel-night select-none">
-            Kami telah mengirimkan kode verifkasi melalui email yang Anda daftarkan
+            Kami telah mengirimkan kode verifkasi melalui email yang Anda daftarkan.
           </span>
         </div>
         <div className="w-full column-center">
           <label className="my-2 text-steel-night font-semibold">Kode Verifikasi</label>
           <InputOTP length={6} onComplete={handleInputOtp} />
+          <div className="row-center gap-1 my-4">
+            <span className="font-normal text-center text-xs text-steel-night select-none">Tidak menerima kode verifikasi?</span>
+            {timer.set ? (
+              <Timer show={timer.set} minute={timer.minute} />
+            ) : (
+              <span
+                onClick={handleResend}
+                className="font-semibold text-center text-xs text-steel-night select-none hover:text-steel-night/70 hover:cursor-pointer"
+              >
+                Kirim Ulang
+              </span>
+            )}
+          </div>
           <button
             type="submit"
-            className="h-10 my-4 w-40 row-center bg-steel-night font-semibold text-cloud-white rounded-md hover:bg-steel-night/90 hover:text-cloud-white/90 hover:cursor-pointer"
+            className="h-10 mb-3 w-40 row-center bg-steel-night font-semibold text-cloud-white rounded-md hover:bg-steel-night/90 hover:text-cloud-white/90 hover:cursor-pointer"
           >
             {!loading && "Verifikasi"}
             {loading && <Loading />}

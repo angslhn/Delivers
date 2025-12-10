@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useAlert, defaultAlert } from "@/hooks/Alert";
+import { defaultAlert } from "@/context/AlertContext";
+import { useAlert } from "@/hooks/Alert";
 
+import Timer from "@/components/element/Timer";
 import Loading from "@/components/element/Loading";
 import InputOTP from "@/components/element/InputOTP";
 
@@ -16,8 +18,18 @@ type LoginVerifyResponse = {
   };
 };
 
+type ResendResponse = {
+  message: {
+    title: string;
+    description: string;
+  };
+  token: string;
+  delay_request: number;
+};
+
 export default function LoginVerifyPage(): JSX.Element {
   const [loading, setLoading] = useState<boolean>(false);
+  const [timer, setTimer] = useState<{ set: boolean; minute: number }>({ set: false, minute: 0 });
   const [otp, setOtp] = useState<string | null>(null);
 
   const router = useRouter();
@@ -98,6 +110,66 @@ export default function LoginVerifyPage(): JSX.Element {
     }
   }
 
+  async function handleResend() {
+    try {
+      const response: Response = await fetch("/api/v1/auth/resend", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token: searchparams.get("token") }),
+      });
+
+      const { message, token, delay_request }: ResendResponse = await response.json();
+
+      const alertValue = {
+        alertCode: response.status,
+        alertShow: true,
+        alertTitle: message.title,
+        alertDescription: message.description,
+      };
+
+      if (response.status === 200) {
+        setAlert({
+          ...alertValue,
+          alertConfirm: () => {
+            setAlert(defaultAlert);
+
+            router.push("/login/verify?token=" + token);
+
+            setTimer({ set: true, minute: delay_request });
+          },
+        });
+
+        return;
+      }
+
+      if (response.status === 404) {
+        setAlert({
+          ...alertValue,
+          alertConfirm: () => {
+            setAlert(defaultAlert);
+
+            router.push("/login");
+          },
+        });
+      }
+    } catch {}
+  }
+
+  useEffect(() => {
+    if (!timer) return;
+
+    const timeout = setTimeout(
+      () => {
+        setTimer({ set: false, minute: 0 });
+      },
+      timer.minute * 60 * 1000
+    );
+
+    return () => clearTimeout(timeout);
+  }, [timer]);
+
   return (
     <main className="h-screen w-full row-center">
       <form
@@ -119,6 +191,19 @@ export default function LoginVerifyPage(): JSX.Element {
         <div className="w-full column-center">
           <label className="my-2 text-steel-night font-semibold">Kode Verifikasi</label>
           <InputOTP length={6} onComplete={handleInputOtp} />
+          <div className="row-center gap-1 my-4">
+            <span className="font-normal text-center text-xs text-steel-night select-none">Tidak menerima kode verifikasi?</span>
+            {timer.set ? (
+              <Timer show={timer.set} minute={timer.minute} />
+            ) : (
+              <span
+                onClick={handleResend}
+                className="font-semibold text-center text-xs text-steel-night select-none hover:text-steel-night/70 hover:cursor-pointer"
+              >
+                Kirim Ulang
+              </span>
+            )}
+          </div>
           <button
             type="submit"
             className="h-10 my-4 w-40 row-center bg-steel-night font-semibold text-cloud-white rounded-md hover:bg-steel-night/90 hover:text-cloud-white/90 hover:cursor-pointer"

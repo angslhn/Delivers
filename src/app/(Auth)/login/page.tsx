@@ -5,11 +5,13 @@ import Link from "next/link";
 import { ZodError } from "zod";
 import { useRouter } from "next/navigation";
 import { useState, ChangeEvent } from "react";
-import { useAlert, defaultAlert } from "@/hooks/Alert";
+import { useAlert } from "@/hooks/Alert";
+import { defaultAlert } from "@/context/AlertContext";
 
 import Input from "@/components/element/Input";
 import Loading from "@/components/element/Loading";
 import parseErrors from "@/helpers/parse-errors";
+import login from "@/schemas/auth/login";
 
 import type { FormEvent, JSX } from "react";
 
@@ -50,12 +52,14 @@ export default function LoginPage(): JSX.Element {
     setLoading(true);
 
     try {
+      const validation = login.parse(data);
+
       const response: Response = await fetch("/api/v1/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(validation),
       });
 
       const { message, token }: LoginResponse = await response.json();
@@ -120,14 +124,14 @@ export default function LoginPage(): JSX.Element {
             Masuk sekarang untuk menikmati kemudahan berbelanja dan penawaran eksklusif.
           </span>
         </div>
-        <div className="w-full column-center gap-3">
+        <div className="w-full column-center">
           <Input label="Email" name="email" onChange={handleInput("email")} value={data.email} invalid={errors.email} />
           <Input label="Kata Sandi" name="password" onChange={handleInput("password")} value={data.password} invalid={errors.password} />
           <button
             type="submit"
             className="h-10 my-4 w-40 row-center bg-steel-night font-semibold text-cloud-white rounded-md hover:bg-steel-night/90 hover:text-cloud-white/90 hover:cursor-pointer"
           >
-            {!loading && "Daftar"}
+            {!loading && "Masuk"}
             {loading && <Loading />}
           </button>
           <div className="flex gap-1">

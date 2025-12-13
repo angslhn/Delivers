@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import env from "@/config/env";
-import verifyLogin from "@/schemas/auth/verify-login";
+import verifyLogin from "@/schema/auth/verify-login";
 
 import { User } from "@/model/User";
 import { NextRequest, NextResponse } from "next/server";

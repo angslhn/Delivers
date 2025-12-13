@@ -1,12 +1,12 @@
-import id from "@/helpers/id";
-import otp from "@/helpers/otp";
+import id from "@/helper/id";
+import otp from "@/helper/otp";
 import bcrypt from "bcryptjs";
-import token from "@/helpers/token";
-import register from "@/schemas/auth/register";
+import token from "@/helper/token";
+import register from "@/schema/auth/register";
 
 import { User } from "@/model/User";
 import { NextRequest, NextResponse } from "next/server";
-import { future } from "@/helpers/datetime";
+import { future } from "@/helper/datetime";
 
 import type { Register } from "@/types/global";
 

@@ -7,15 +7,15 @@ import Link from "next/link";
 import { useState } from "react";
 import { ZodError } from "zod";
 import { useRouter } from "next/navigation";
-import { useAlert } from "@/hooks/Alert";
+import { useAlert } from "@/hook/Alert";
 import { defaultAlert } from "@/context/AlertContext";
 
-import signupSchema from "@/schemas/auth/register";
-import parseErrors from "@/helpers/parse-errors";
-import capitalize from "@/helpers/capitalize";
+import signupSchema from "@/schema/auth/register";
+import parseErrors from "@/helper/parse-errors";
+import capitalize from "@/helper/capitalize";
 
-import Input from "@/components/element/Input";
-import Loading from "@/components/element/Loading";
+import Input from "@/element/Input";
+import Loading from "@/element/Loading";
 
 type Input = "fullname" | "email" | "password";
 

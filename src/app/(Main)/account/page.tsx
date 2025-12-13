@@ -4,9 +4,9 @@ import type { JSX } from "react";
 
 import Link from "next/link";
 import Image from "next/image";
-import blank from "@/assets/images/blank.png";
+import blank from "@/asset/image/blank.png";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/hooks/Auth";
+import { useAuth } from "@/hook/Auth";
 
 import type { UserPayload } from "@/types/global";
 

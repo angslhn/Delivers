@@ -3,11 +3,11 @@
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { defaultAlert } from "@/context/AlertContext";
-import { useAlert } from "@/hooks/Alert";
+import { useAlert } from "@/hook/Alert";
 
-import Timer from "@/components/element/Timer";
-import Loading from "@/components/element/Loading";
-import InputOTP from "@/components/element/InputOTP";
+import Timer from "@/element/Timer";
+import Loading from "@/element/Loading";
+import InputOTP from "@/element/InputOTP";
 
 import type { JSX, FormEvent } from "react";
 
@@ -27,7 +27,7 @@ type ResendResponse = {
   delay_request: number;
 };
 
-export default function LoginVerifyPage(): JSX.Element {
+export default function VerifyLoginPage(): JSX.Element {
   const [loading, setLoading] = useState<boolean>(false);
   const [timer, setTimer] = useState<{ set: boolean; minute: number }>({ set: false, minute: 0 });
   const [otp, setOtp] = useState<string | null>(null);

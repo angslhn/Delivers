@@ -14,8 +14,7 @@ import parseErrors from "@/helper/parse-errors";
 import login from "@/schema/auth/login";
 
 import type { FormEvent, JSX } from "react";
-
-type Field = "email" | "password";
+import { UserData } from "@/types/global";
 
 type LoginResponse = {
   message: {
@@ -25,18 +24,16 @@ type LoginResponse = {
   token?: string;
 };
 
-const defaultValue = { email: "", password: "" };
-
-export default function LoginPage(): JSX.Element {
-  const [data, setData] = useState<Record<"email" | "password", string>>(defaultValue);
-  const [errors, setErrors] = useState<Record<"email" | "password", string>>(defaultValue);
+export default function ForgotPasswordPage(): JSX.Element {
+  const [data, setData] = useState<Pick<UserData, "email">>({ email: "" });
+  const [errors, setErrors] = useState<Pick<UserData, "email">>({ email: "" });
   const [loading, setLoading] = useState<boolean>(false);
 
   const { setAlert } = useAlert();
 
   const router = useRouter();
 
-  function handleInput(field: Field) {
+  function handleInput(field: "email") {
     return function (e: ChangeEvent<HTMLInputElement>) {
       setData((prev) => ({ ...prev, [field]: e.target.value }));
 
@@ -46,7 +43,7 @@ export default function LoginPage(): JSX.Element {
     };
   }
 
-  async function handleLogin(e: FormEvent<HTMLFormElement>): Promise<void> {
+  async function handleForgotPassword(e: FormEvent<HTMLFormElement>): Promise<void> {
     e.preventDefault();
 
     setLoading(true);
@@ -91,15 +88,15 @@ export default function LoginPage(): JSX.Element {
       const fieldErrors = [401, 404];
 
       if (fieldErrors.includes(response.status)) {
-        const field: Record<"401" | "404", Field> = { "401": "password", "404": "email" };
+        const field: Record<"404", "email"> = { "404": "email" };
 
-        setErrors((prev) => ({ ...prev, [field[String(response.status) as "401" | "404"]]: message.description }));
+        setErrors((prev) => ({ ...prev, [field[String(response.status) as "404"]]: message.description }));
 
         return;
       }
     } catch (error) {
       if (error instanceof ZodError) {
-        setErrors(parseErrors(error));
+        setErrors((prev) => ({ ...prev, ...parseErrors(error) }));
       }
     } finally {
       setLoading(false);
@@ -109,10 +106,10 @@ export default function LoginPage(): JSX.Element {
   return (
     <main className="h-screen w-full row-center">
       <form
-        onSubmit={handleLogin}
-        className="xxs:w-11/12 s-plus:w-3/4 s-extra-large:w-2/3 md:w-[23rem] column-center gap-5 px-4 py-4 rounded-xl border border-black/15 shadow"
+        onSubmit={handleForgotPassword}
+        className="xxs:w-11/12 s-plus:w-3/4 s-extra-large:w-2/3 md:w-[23rem] column-center gap-3 px-4 py-4 rounded-xl border border-black/15 shadow"
       >
-        <div className="w-full column-center gap-3">
+        <div className="w-full column-center gap-2">
           <div className="row-center gap-2">
             <svg className="w-10 fill-steel-night" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 1000" xmlSpace="preserve">
               <path d="m26.34 115.32 546.04 123.84 1.51 521.82L26.11 887.19l2-112.84 437.38-97.89-1.11-347.65-438.04-96.48zm83.8-52.44v69.22l118.08 26.57V90.44zm119.15 779.76v66.94l-118.08 27.54 1.59-67.56z" />
@@ -121,25 +118,18 @@ export default function LoginPage(): JSX.Element {
             <h1 className="font-bold text-2xl text-steel-night select-none">Delivers.</h1>
           </div>
           <span className="font-normal text-center text-[0.9rem] text-steel-night select-none">
-            Masuk sekarang untuk menikmati kemudahan berbelanja dan penawaran eksklusif.
+            Atur ulang kata sandi Anda sekarang agar tidak melewatkan kemudahan berbelanja dan penawaran eksklusif kami.
           </span>
         </div>
         <div className="relative w-full column-center">
           <Input label="Email" name="email" onChange={handleInput("email")} value={data.email} invalid={errors.email} />
-          <Input label="Kata Sandi" name="password" onChange={handleInput("password")} value={data.password} invalid={errors.password} />
           <button
             type="submit"
-            className="h-10 my-4 w-40 row-center bg-steel-night font-semibold text-cloud-white rounded-md hover:bg-steel-night/90 hover:text-cloud-white/90 hover:cursor-pointer"
+            className="h-10 w-40 mt-2 row-center bg-steel-night font-semibold text-cloud-white rounded-md hover:bg-steel-night/90 hover:text-cloud-white/90 hover:cursor-pointer"
           >
-            {!loading && "Masuk"}
+            {!loading && "Kirim"}
             {loading && <Loading />}
           </button>
-          <div className="flex gap-1">
-            <span className="text-sm select-none">Anda belum memiliki akun?</span>
-            <Link href="/register" className="text-sm font-medium select-none hover:underline">
-              Registrasi
-            </Link>
-          </div>
         </div>
       </form>
     </main>

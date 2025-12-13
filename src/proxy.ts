@@ -2,7 +2,7 @@ import env from "@/config/env";
 import { NextRequest, NextResponse } from "next/server";
 import { authPath, protectedPath } from "@/libs/path";
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl;
 
   const { cookieName } = env();

@@ -5,7 +5,7 @@ import type { JSX } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { authPath, accountPath } from "@/libs/path";
-import { useViewport } from "@/hooks/Viewport";
+import { useViewport } from "@/hook/Viewport";
 
 export default function Header(): JSX.Element | undefined {
   const router = useRouter();

@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { User } from "@/model/User";
-import { future } from "@/helpers/datetime";
+import { future } from "@/helper/datetime";
 
-import otp from "@/helpers/otp";
-import token from "@/helpers/token";
-import resend from "@/schemas/auth/resend";
+import otp from "@/helper/otp";
+import token from "@/helper/token";
+import resend from "@/schema/auth/resend";
 
 import type { Resend, UserData } from "@/types/global";
 

@@ -1,4 +1,4 @@
-import verifyEmail from "@/schemas/auth/verify-email";
+import verifyEmail from "@/schema/auth/verify-email";
 
 import { User } from "@/model/User";
 import { NextRequest, NextResponse } from "next/server";

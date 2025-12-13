@@ -1,11 +1,11 @@
-import otp from "@/helpers/otp";
+import otp from "@/helper/otp";
 import bcrypt from "bcryptjs";
-import login from "@/schemas/auth/login";
-import token from "@/helpers/token";
+import login from "@/schema/auth/login";
+import token from "@/helper/token";
 
 import { User } from "@/model/User";
 import { NextRequest, NextResponse } from "next/server";
-import { future } from "@/helpers/datetime";
+import { future } from "@/helper/datetime";
 
 import type { Login, UserData } from "@/types/global";
 

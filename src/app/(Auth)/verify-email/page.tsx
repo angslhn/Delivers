@@ -3,13 +3,13 @@
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { defaultAlert } from "@/context/AlertContext";
-import { useAlert } from "@/hooks/Alert";
+import { useAlert } from "@/hook/Alert";
 
-import Loading from "@/components/element/Loading";
-import InputOTP from "@/components/element/InputOTP";
+import Loading from "@/element/Loading";
+import InputOTP from "@/element/InputOTP";
 
 import type { JSX, FormEvent } from "react";
-import Timer from "@/components/element/Timer";
+import Timer from "@/element/Timer";
 
 type VerifyEmailResponse = {
   message: {

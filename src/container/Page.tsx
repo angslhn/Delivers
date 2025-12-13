@@ -2,9 +2,9 @@
 
 import type { JSX, ReactNode } from "react";
 
-import Provider from "@/containers/Provider";
+import Provider from "@/container/Provider";
 import ComingSoon from "@/errors/ComingSoon";
-import { useViewport } from "@/hooks/Viewport";
+import { useViewport } from "@/hook/Viewport";
 
 import type { UserPayload } from "@/types/global";
 

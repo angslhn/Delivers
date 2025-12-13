@@ -1,20 +1,17 @@
-import id from "@/helper/id";
-import otp from "@/helper/otp";
-import bcrypt from "bcryptjs";
-import token from "@/helper/token";
-import register from "@/schema/auth/register";
-
-import { User } from "@/model/User";
 import { NextRequest, NextResponse } from "next/server";
-import { future } from "@/helper/datetime";
+import { User } from "@/model/User";
 
-import type { UserData, AuthResponse } from "@/types/global";
+import { future } from "@/helper/datetime";
+import forgotPassword from "@/schema/auth/forgot-password";
+import token from "@/helper/token";
+
+import type { AuthResponse, UserData } from "@/types/global";
 
 export async function POST(request: NextRequest): Promise<NextResponse<AuthResponse>> {
   try {
-    const data: Pick<UserData, "fullname" | "email" | "password"> = await request.json();
+    const data: Pick<UserData, "email"> = await request.json();
 
-    const validation = register.safeParse(data);
+    const validation = forgotPassword.safeParse(data);
 
     if (!validation.success) {
       return NextResponse.json(
@@ -28,30 +25,24 @@ export async function POST(request: NextRequest): Promise<NextResponse<AuthRespo
       );
     }
 
-    const user = await User.findByEmail(data.email);
+    const user: UserData | null = await User.findByEmail(data.email);
 
-    if (user) {
+    if (!user) {
       return NextResponse.json(
         {
           message: {
-            title: "Email Telah Terdaftar",
-            description: "Email yang digunakan untuk pendaftaran oleh Anda, telah terdaftar silahkan untuk masuk.",
+            title: "Email Tidak Ditemukan",
+            description: "Email ini tidak dapat ditemukan",
           },
         },
-        { status: 409 }
+        { status: 404 }
       );
     }
 
-    const newOtp = otp(6);
     const newToken = token(64);
 
-    const hashed = await bcrypt.hash(validation.data.password, 12);
-
-    await User.create({
-      ...validation.data,
-      id: id(),
-      password: hashed,
-      otp: newOtp,
+    await User.update({
+      id: user.id,
       token: newToken,
       expires_at: future({ minute: 10 }),
     });
@@ -59,14 +50,14 @@ export async function POST(request: NextRequest): Promise<NextResponse<AuthRespo
     return NextResponse.json(
       {
         message: {
-          title: "Pendaftaran Pengguna Berhasil",
-          description: "Pendaftaran pengguna berhasil, Anda akan dialihkan ke halaman verifikasi email.",
+          title: "Periksa Email Anda",
+          description: `Kami telah mengirimkan tautan untuk mengatur ulang kata sandi ke ${user.email}. Silakan periksa kotak masuk inbox Anda.`,
         },
         token: newToken,
       },
-      { status: 201 }
+      { status: 200 }
     );
-  } catch (errors) {
+  } catch {
     return NextResponse.json(
       {
         message: {

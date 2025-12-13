@@ -7,30 +7,14 @@ import { useAlert } from "@/hook/Alert";
 
 import Loading from "@/element/Loading";
 import InputOTP from "@/element/InputOTP";
-
-import type { JSX, FormEvent } from "react";
 import Timer from "@/element/Timer";
 
-type VerifyEmailResponse = {
-  message: {
-    title: string;
-    description: string;
-  };
-  email: string;
-};
-
-type ResendResponse = {
-  message: {
-    title: string;
-    description: string;
-  };
-  token: string;
-  delay_request: number;
-};
+import type { JSX, FormEvent } from "react";
+import type { AuthResponse, Delay } from "@/types/global";
 
 export default function VerifyEmailPage(): JSX.Element {
   const [loading, setLoading] = useState<boolean>(false);
-  const [timer, setTimer] = useState<{ set: boolean; minute: number }>({ set: false, minute: 0 });
+  const [timer, setTimer] = useState<Delay>({ set: false, minute: 0 });
   const [otp, setOtp] = useState<string | null>(null);
 
   const router = useRouter();
@@ -58,7 +42,7 @@ export default function VerifyEmailPage(): JSX.Element {
         body: JSON.stringify({ token, otp }),
       });
 
-      const { message }: VerifyEmailResponse = await response.json();
+      const { message }: AuthResponse = await response.json();
 
       const alertValue = {
         alertCode: response.status,
@@ -106,7 +90,7 @@ export default function VerifyEmailPage(): JSX.Element {
         body: JSON.stringify({ token: searchparams.get("token") }),
       });
 
-      const { message, token, delay_request }: ResendResponse = await response.json();
+      const { message, token, delay }: AuthResponse = await response.json();
 
       const alertValue = {
         alertCode: response.status,
@@ -123,7 +107,7 @@ export default function VerifyEmailPage(): JSX.Element {
 
             router.push("/verify-email?token=" + token);
 
-            setTimer({ set: true, minute: delay_request });
+            setTimer({ set: true, minute: delay as number });
           },
         });
 

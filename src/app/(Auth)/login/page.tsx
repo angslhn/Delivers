@@ -14,22 +14,15 @@ import parseErrors from "@/helper/parse-errors";
 import login from "@/schema/auth/login";
 
 import type { FormEvent, JSX } from "react";
+import type { AuthResponse } from "@/types/global";
 
 type Field = "email" | "password";
-
-type LoginResponse = {
-  message: {
-    title: string;
-    description: string;
-  };
-  token?: string;
-};
 
 const defaultValue = { email: "", password: "" };
 
 export default function LoginPage(): JSX.Element {
-  const [data, setData] = useState<Record<"email" | "password", string>>(defaultValue);
-  const [errors, setErrors] = useState<Record<"email" | "password", string>>(defaultValue);
+  const [data, setData] = useState<Record<Field, string>>(defaultValue);
+  const [errors, setErrors] = useState<Record<Field, string>>(defaultValue);
   const [loading, setLoading] = useState<boolean>(false);
 
   const { setAlert } = useAlert();
@@ -62,7 +55,7 @@ export default function LoginPage(): JSX.Element {
         body: JSON.stringify(validation),
       });
 
-      const { message, token }: LoginResponse = await response.json();
+      const { message, token }: AuthResponse = await response.json();
 
       const alertValue = {
         alertCode: response.status,

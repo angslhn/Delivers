@@ -7,11 +7,12 @@ import otp from "@/helper/otp";
 import token from "@/helper/token";
 import resend from "@/schema/auth/resend";
 
-import type { Resend, UserData } from "@/types/global";
+import type { UserData, AuthResponse } from "@/types/global";
+import type { PickNonNullable } from "@/types/utils";
 
-export async function POST(request: NextRequest): Promise<NextResponse> {
+export async function POST(request: NextRequest): Promise<NextResponse<AuthResponse>> {
   try {
-    const data: Resend = await request.json();
+    const data: PickNonNullable<UserData, "token"> = await request.json();
 
     const validation = resend.safeParse(data);
 
@@ -84,7 +85,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           description: "Kode verifikasi baru telah dikirim ke email Anda. Mohon cek folder Inbox atau Spam.",
         },
         token: newToken,
-        delay_request: 1,
+        delay: 1,
       },
       { status: 200 }
     );

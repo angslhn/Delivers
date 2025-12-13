@@ -1,7 +1,5 @@
 "use client";
 
-import Link from "next/link";
-
 import { ZodError } from "zod";
 import { useRouter } from "next/navigation";
 import { useState, ChangeEvent } from "react";
@@ -11,21 +9,13 @@ import { defaultAlert } from "@/context/AlertContext";
 import Input from "@/element/Input";
 import Loading from "@/element/Loading";
 import parseErrors from "@/helper/parse-errors";
-import login from "@/schema/auth/login";
+import forgotPassword from "@/schema/auth/forgot-password";
 
 import type { FormEvent, JSX } from "react";
-import { UserData } from "@/types/global";
-
-type LoginResponse = {
-  message: {
-    title: string;
-    description: string;
-  };
-  token?: string;
-};
+import type { AuthResponse, UserData } from "@/types/global";
 
 export default function ForgotPasswordPage(): JSX.Element {
-  const [data, setData] = useState<Pick<UserData, "email">>({ email: "" });
+  const [email, setEmail] = useState<string>("");
   const [errors, setErrors] = useState<Pick<UserData, "email">>({ email: "" });
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -35,7 +25,7 @@ export default function ForgotPasswordPage(): JSX.Element {
 
   function handleInput(field: "email") {
     return function (e: ChangeEvent<HTMLInputElement>) {
-      setData((prev) => ({ ...prev, [field]: e.target.value }));
+      setEmail(e.target.value);
 
       if (errors[field] !== "") {
         setErrors((prev) => ({ ...prev, [field]: "" }));
@@ -49,9 +39,9 @@ export default function ForgotPasswordPage(): JSX.Element {
     setLoading(true);
 
     try {
-      const validation = login.parse(data);
+      const validation = forgotPassword.parse({ email });
 
-      const response: Response = await fetch("/api/v1/auth/login", {
+      const response: Response = await fetch("/api/v1/auth/forgot-password", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -59,7 +49,7 @@ export default function ForgotPasswordPage(): JSX.Element {
         body: JSON.stringify(validation),
       });
 
-      const { message, token }: LoginResponse = await response.json();
+      const { message }: AuthResponse = await response.json();
 
       const alertValue = {
         alertCode: response.status,
@@ -68,15 +58,11 @@ export default function ForgotPasswordPage(): JSX.Element {
         alertDescription: message.description,
       };
 
-      const toVerifyCodes = [200, 403];
-
-      if (toVerifyCodes.includes(response.status)) {
-        const page = { "200": "/login/verify", "403": "/verify-email" };
-
+      if (response.status === 200) {
         setAlert({
           ...alertValue,
           alertConfirm: () => {
-            router.push(page[String(response.status) as "200" | "403"] + "?token=" + token);
+            router.push("/account");
 
             setAlert(defaultAlert);
           },
@@ -85,12 +71,17 @@ export default function ForgotPasswordPage(): JSX.Element {
         return;
       }
 
-      const fieldErrors = [401, 404];
+      if (response.status === 400) {
+        setAlert({
+          ...alertValue,
+          alertConfirm: () => {
+            setAlert(defaultAlert);
+          },
+        });
+      }
 
-      if (fieldErrors.includes(response.status)) {
-        const field: Record<"404", "email"> = { "404": "email" };
-
-        setErrors((prev) => ({ ...prev, [field[String(response.status) as "404"]]: message.description }));
+      if (response.status === 404) {
+        setErrors({ email: message.description });
 
         return;
       }
@@ -122,10 +113,10 @@ export default function ForgotPasswordPage(): JSX.Element {
           </span>
         </div>
         <div className="relative w-full column-center">
-          <Input label="Email" name="email" onChange={handleInput("email")} value={data.email} invalid={errors.email} />
+          <Input label="Email" name="email" onChange={handleInput("email")} value={email} invalid={errors.email} />
           <button
             type="submit"
-            className="h-10 w-40 mt-2 row-center bg-steel-night font-semibold text-cloud-white rounded-md hover:bg-steel-night/90 hover:text-cloud-white/90 hover:cursor-pointer"
+            className="h-10 w-40 mt-5 row-center bg-steel-night font-semibold text-cloud-white rounded-md hover:bg-steel-night/90 hover:text-cloud-white/90 hover:cursor-pointer"
           >
             {!loading && "Kirim"}
             {loading && <Loading />}

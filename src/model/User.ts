@@ -1,7 +1,7 @@
 import { query } from "@/libs/mysql";
 
 import type { ResultSetHeader } from "mysql2";
-import type { UserCreate, UserDataPacket, UserUpdate } from "@/types/global";
+import type { UserCreate, UserDataPacket, UserEdit } from "@/types/global";
 
 export const User = {
   findById: async (id: number): Promise<UserDataPacket | null> => {
@@ -22,7 +22,7 @@ export const User = {
     return users[0] || null;
   },
 
-  create: async (data: UserCreate): Promise<number> => {
+  create: async (data: Required<UserCreate>): Promise<number> => {
     const columns = Object.keys(data);
     const values = Object.values(data);
 
@@ -35,7 +35,7 @@ export const User = {
     return data["id"];
   },
 
-  update: async (data: UserUpdate): Promise<number | undefined> => {
+  update: async (data: Partial<UserEdit>): Promise<number | undefined> => {
     const { id, ...updateData } = data;
 
     if (Object.keys(updateData).length === 0) {

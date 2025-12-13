@@ -1,11 +1,6 @@
 import type { RowDataPacket } from "mysql2";
-import type { Dispatch, SetStateAction } from "react";
 
-export interface Token {
-  data: string;
-}
-
-export interface Env {
+export type Env = {
   dbHost: string | undefined;
   dbPort: number | undefined;
   dbUser: string | undefined;
@@ -13,7 +8,7 @@ export interface Env {
   dbPassword: string | undefined;
   jwtSecure: string | undefined;
   cookieName: string | undefined;
-}
+};
 
 export type Alert = {
   alertCode: number;
@@ -24,7 +19,7 @@ export type Alert = {
   alertCancel?: () => void;
 };
 
-export interface Product {
+export type Product = {
   availabilityStatus: string;
   brand: string;
   description: string;
@@ -35,60 +30,16 @@ export interface Product {
   rating: number;
   stock: number;
   title: string;
-}
+};
 
-export interface JSONProduct {
+export type JSONProduct = {
   limit: number;
   products: [Product];
   skip: number;
   total: number;
-}
+};
 
-export interface Login {
-  email: string;
-  password: string;
-}
-
-export interface Register {
-  fullname: string;
-  email: string;
-  password: string;
-}
-
-export interface Verify {
-  token: string;
-  otp: string;
-}
-
-export interface Resend {
-  token: string;
-}
-
-export interface UserCreate {
-  id: number;
-  fullname: string;
-  email: string;
-  password: string;
-  token: string;
-  otp: string;
-  expires_at: string;
-}
-
-export interface UserUpdate {
-  id?: number;
-  fullname?: string;
-  email?: string;
-  password?: string;
-  phone_number?: string | null;
-  status?: "active" | "pending" | "deleted";
-  role?: "customer" | "seller" | "admin";
-  avatar?: string | null;
-  token?: string | null;
-  otp?: string | null;
-  expires_at?: string | null;
-  login_at?: string | null;
-}
-export interface UserData {
+export type UserData = {
   id: number;
   fullname: string;
   email: string;
@@ -103,15 +54,35 @@ export interface UserData {
   login_at: Date | null;
   created_at: Date;
   updated_at: Date;
-}
+};
 
-export interface UserPayload {
-  id: number;
-  fullname: string;
-  email: string;
-  phone_number: string | null;
-  avatar: string;
-  role: "customer" | "seller" | "admin";
-}
+type IgnoreCreate = "phone_number" | "status" | "role" | "avatar" | "login_at" | "expires_at" | "created_at" | "updated_at";
 
-export interface UserDataPacket extends UserData, RowDataPacket {}
+export type UserCreate = Omit<UserData, IgnoreCreate> & { expires_at: string };
+
+type DateField = "expires_at" | "login_at" | "created_at" | "updated_at";
+
+export type UserEdit = Omit<UserData, DateField> & {
+  expires_at: string | null;
+  login_at: string | null;
+};
+
+type IgnorePayload = "status" | "token" | "otp" | "expired_at" | "login_at" | "created_at" | "updated_at";
+
+export type UserPayload = Omit<UserData, IgnorePayload>;
+
+export type UserDataPacket = UserData & RowDataPacket;
+
+export type AuthResponse = {
+  message: {
+    title: string;
+    description: string;
+  };
+  token?: string | null;
+  delay?: number;
+};
+
+export type Delay = {
+  set: boolean;
+  minute: number;
+};

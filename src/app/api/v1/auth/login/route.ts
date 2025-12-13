@@ -7,11 +7,11 @@ import { User } from "@/model/User";
 import { NextRequest, NextResponse } from "next/server";
 import { future } from "@/helper/datetime";
 
-import type { Login, UserData } from "@/types/global";
+import type { AuthResponse, UserData } from "@/types/global";
 
-export async function POST(request: NextRequest): Promise<NextResponse> {
+export async function POST(request: NextRequest): Promise<NextResponse<AuthResponse>> {
   try {
-    const data: Login = await request.json();
+    const data: Pick<UserData, "email" | "password"> = await request.json();
 
     const validation = login.safeParse(data);
 

@@ -5,11 +5,12 @@ import verifyLogin from "@/schema/auth/verify-login";
 import { User } from "@/model/User";
 import { NextRequest, NextResponse } from "next/server";
 
-import type { UserData, Verify } from "@/types/global";
+import type { UserData, AuthResponse } from "@/types/global";
+import type { PickNonNullable } from "@/types/utils";
 
-export async function POST(request: NextRequest): Promise<NextResponse> {
+export async function POST(request: NextRequest): Promise<NextResponse<AuthResponse>> {
   try {
-    const data: Verify = await request.json();
+    const data: PickNonNullable<UserData, "token" | "otp"> = await request.json();
 
     const validation = verifyLogin.safeParse(data);
 

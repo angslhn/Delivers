@@ -17,30 +17,20 @@ import capitalize from "@/helper/capitalize";
 import Input from "@/element/Input";
 import Loading from "@/element/Loading";
 
-type Input = "fullname" | "email" | "password";
-
-type RegisterResponse = {
-  message: {
-    title: string;
-    description: string;
-  };
-  token: string;
-};
-
-type Field = Record<string, string>;
+import type { AuthResponse } from "@/types/global";
 
 const defaultValue = { fullname: "", email: "", password: "" };
 
 export default function RegisterPage(): JSX.Element {
-  const [data, setData] = useState<Field>(defaultValue);
-  const [errors, setErrors] = useState<Field>(defaultValue);
+  const [data, setData] = useState<Record<string, string>>(defaultValue);
+  const [errors, setErrors] = useState<Record<string, string>>(defaultValue);
   const [loading, setLoading] = useState<boolean>(false);
 
   const { setAlert } = useAlert();
 
   const router = useRouter();
 
-  function handleInput(field: Input) {
+  function handleInput(field: "fullname" | "email" | "password") {
     return function (e: ChangeEvent<HTMLInputElement>) {
       const value = field !== "fullname" ? e.target.value : capitalize(e.target.value);
 
@@ -68,7 +58,7 @@ export default function RegisterPage(): JSX.Element {
         body: JSON.stringify(validation),
       });
 
-      const { message, token }: RegisterResponse = await response.json();
+      const { message, token }: AuthResponse = await response.json();
 
       const alertValue = {
         alertCode: response.status,

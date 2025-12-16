@@ -119,7 +119,14 @@ export default function LoginPage(): JSX.Element {
         </div>
         <div className="relative w-full column-center">
           <Input label="Email" name="email" onChange={handleInput("email")} value={data.email} invalid={errors.email} />
-          <Input label="Kata Sandi" name="password" onChange={handleInput("password")} value={data.password} invalid={errors.password} />
+          <Input
+            label="Kata Sandi"
+            name="password"
+            forgot_password={true}
+            onChange={handleInput("password")}
+            value={data.password}
+            invalid={errors.password}
+          />
           <button
             type="submit"
             className="h-10 my-4 w-40 row-center bg-steel-night font-semibold text-cloud-white rounded-md hover:bg-steel-night/90 hover:text-cloud-white/90 hover:cursor-pointer"

@@ -1,4 +1,4 @@
-import { query } from "@/libs/mysql";
+import { query } from "@/lib/mysql";
 
 import type { ResultSetHeader } from "mysql2";
 import type { UserCreate, UserDataPacket, UserEdit } from "@/types/global";

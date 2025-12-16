@@ -3,7 +3,7 @@
 import type { JSX } from "react";
 
 import Link from "next/link";
-import { authPath } from "@/libs/path";
+import { authPath } from "@/resource/path";
 import { usePathname } from "next/navigation";
 
 export default function Menu(): JSX.Element {

@@ -18,7 +18,7 @@ export default function VerifyLoginPage(): JSX.Element {
   const [otp, setOtp] = useState<string | null>(null);
 
   const router = useRouter();
-  const searchparams = useSearchParams();
+  const searchParams = useSearchParams();
 
   const { setAlert } = useAlert();
 
@@ -32,7 +32,7 @@ export default function VerifyLoginPage(): JSX.Element {
     setLoading(true);
 
     try {
-      const token = searchparams.get("token");
+      const token = searchParams.get("token");
 
       const response: Response = await fetch("/api/v1/auth/verify/login", {
         method: "POST",
@@ -102,7 +102,7 @@ export default function VerifyLoginPage(): JSX.Element {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ token: searchparams.get("token") }),
+        body: JSON.stringify({ token: searchParams.get("token") }),
       });
 
       const { message, token, delay }: AuthResponse = await response.json();

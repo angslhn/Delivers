@@ -1,6 +1,6 @@
 import env from "@/config/env";
 import { NextRequest, NextResponse } from "next/server";
-import { authPath, protectedPath } from "@/libs/path";
+import { authPath, authTokenPath, protectedPath } from "@/resource/path";
 
 export function proxy(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl;
@@ -12,8 +12,8 @@ export function proxy(request: NextRequest) {
   const token = searchParams.get("token")?.match(/^[a-zA-Z0-9]{64}$/);
 
   const isAuthPage = authPath.some((path) => pathname.startsWith(path));
+  const isAuthTokenPage = authTokenPath.some((path) => pathname.startsWith(path));
   const isProtectedPage = protectedPath.some((path) => pathname.startsWith(path));
-  const isVerifyPage = ["/verify-email", "/login/verify"].some((path) => pathname.startsWith(path));
 
   if (cookie && isAuthPage) {
     const homeUrl = new URL("/", request.url);
@@ -21,7 +21,7 @@ export function proxy(request: NextRequest) {
     return NextResponse.redirect(homeUrl);
   }
 
-  if (isVerifyPage && !token) {
+  if (isAuthTokenPage && !token) {
     const signinUrl = new URL("/login", request.url);
 
     return NextResponse.redirect(signinUrl);

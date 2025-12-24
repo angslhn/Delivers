@@ -1,20 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { User } from "@/model/User";
-import { future } from "@/helper/datetime";
-
-import otp from "@/helper/otp";
-import token from "@/helper/token";
-import resend from "@/schema/auth/resend";
+import resetPassword from "@/schema/auth/reset-password";
 
 import type { UserData, AuthResponse } from "@/types/global";
-import type { PickNonNullable } from "@/types/utils";
+import type { MakeNonNullable } from "@/types/utils";
 
 export async function POST(request: NextRequest): Promise<NextResponse<AuthResponse>> {
   try {
-    const data: PickNonNullable<UserData, "token"> = await request.json();
+    const data: MakeNonNullable<UserData, "token" | "password"> = await request.json();
 
-    const validation = resend.safeParse(data);
+    const validation = resetPassword.safeParse(data);
 
     if (!validation.success) {
       return NextResponse.json(
@@ -47,7 +43,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<AuthRespo
         {
           message: {
             title: "Akun Telah Dihapus",
-            description: "Akun pengguna tidak dapat melakukan verifikasi karena telah dihapus.",
+            description: "Akun pengguna tidak dapat mengatur ulang kata sandi karena telah dihapus.",
           },
         },
         { status: 403 }
@@ -60,31 +56,25 @@ export async function POST(request: NextRequest): Promise<NextResponse<AuthRespo
       return NextResponse.json(
         {
           message: {
-            title: "Token Kadaluwarsa",
-            description: "Sesi token verifikasi Anda telah berakhir. Silakan masuk dahulu untuk memperbarui token verifikasi.",
+            title: "Tautan Kedaluwarsa",
+            description: "Batas waktu mengatur ulang kata sandi telah habis. Silakan ajukan permintaan baru.",
           },
         },
-        { status: 403 }
+        { status: 410 }
       );
     }
 
-    const newOtp = otp(6);
-    const newToken = token(64);
-
     await User.update(user.id, {
-      otp: newOtp,
-      token: newToken,
-      expires_at: future({ minute: 10 }),
+      id: user.id,
+      password: data.password,
     });
 
     return NextResponse.json(
       {
         message: {
-          title: "Kode Dikirim Ulang",
-          description: "Kode verifikasi baru telah dikirim ke email Anda. Mohon cek folder Inbox atau Spam.",
+          title: "Kata Sandi Diperbarui",
+          description: "Kata sandi Anda telah berhasil diubah. Silakan masuk kembali menggunakan kata sandi yang baru.",
         },
-        token: newToken,
-        delay: 1,
       },
       { status: 200 }
     );

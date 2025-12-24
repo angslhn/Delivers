@@ -1,12 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { ZodError } from "zod";
 import { useSearchParams, useRouter } from "next/navigation";
+import { defaultAlert } from "@/context/AlertContext";
+import { useAlert } from "@/hook/Alert";
 
 import Input from "@/element/Input";
 import Loading from "@/element/Loading";
+import resetPassword from "@/schema/auth/reset-password";
+import parseErrors from "@/helper/parse-errors";
 
 import type { JSX, ChangeEvent, FormEvent } from "react";
+import type { AuthResponse } from "@/types/global";
 
 type Field = "password" | "confirm_password";
 
@@ -14,6 +20,8 @@ export default function ResetPasswordPage(): JSX.Element {
   const [data, setData] = useState<Record<Field, string>>({ password: "", confirm_password: "" });
   const [errors, setErrors] = useState<Record<Field, string>>({ password: "", confirm_password: "" });
   const [loading, setLoading] = useState<boolean>(false);
+
+  const { setAlert } = useAlert();
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -32,9 +40,81 @@ export default function ResetPasswordPage(): JSX.Element {
     e.preventDefault();
 
     setLoading(true);
+
+    if (data.password !== data.confirm_password) {
+      setData((prev) => ({ ...prev, confirm_password: "Konfirmasi kata sandi tidak cocok" }));
+      return;
+    }
+
     try {
       const token = searchParams.get("token");
-    } catch {
+
+      const validation = resetPassword.parse({ token, password: data.password });
+
+      const response: Response = await fetch("/api/v1/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify(validation),
+      });
+
+      const { message }: AuthResponse = await response.json();
+
+      const codeResponse = response.status;
+
+      const alertValue = {
+        alertCode: response.status,
+        alertShow: true,
+        alertTitle: message.title,
+        alertDescription: message.description,
+      };
+
+      const toLogin = [200, 403, 404, 410];
+
+      if (toLogin.includes(codeResponse)) {
+        setAlert({
+          ...alertValue,
+          alertConfirm: () => {
+            router.push("/login");
+
+            setAlert(defaultAlert);
+          },
+        });
+
+        return;
+      }
+
+      const onPage = [400, 500];
+
+      if (onPage.includes(codeResponse)) {
+        setAlert({
+          ...alertValue,
+          alertConfirm: () => {
+            setAlert(defaultAlert);
+          },
+        });
+
+        return;
+      }
+    } catch (error) {
+      if (error instanceof ZodError) {
+        setErrors(parseErrors(error));
+
+        return;
+      }
+
+      setAlert({
+        alertCode: 0,
+        alertShow: true,
+        alertTitle: "Gagal Mengirimkan Permintaan",
+        alertDescription: "Terjadi kendala pada server kami. Mohon tunggu sebentar sebelum mencoba kembali.",
+        alertConfirm: () => {
+          setAlert(defaultAlert);
+
+          router.push("/login");
+        },
+      });
     } finally {
       setLoading(false);
     }

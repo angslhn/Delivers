@@ -51,6 +51,8 @@ export default function ForgotPasswordPage(): JSX.Element {
 
       const { message }: AuthResponse = await response.json();
 
+      const codeResponse = response.status;
+
       const alertValue = {
         alertCode: response.status,
         alertShow: true,
@@ -58,7 +60,7 @@ export default function ForgotPasswordPage(): JSX.Element {
         alertDescription: message.description,
       };
 
-      if (response.status === 200) {
+      if (codeResponse === 200) {
         setAlert({
           ...alertValue,
           alertConfirm: () => {
@@ -71,16 +73,20 @@ export default function ForgotPasswordPage(): JSX.Element {
         return;
       }
 
-      if (response.status === 400) {
+      const onPage = [400, 500];
+
+      if (onPage.includes(codeResponse)) {
         setAlert({
           ...alertValue,
           alertConfirm: () => {
             setAlert(defaultAlert);
           },
         });
+
+        return;
       }
 
-      if (response.status === 404) {
+      if (codeResponse === 404) {
         setErrors({ email: message.description });
 
         return;
@@ -88,7 +94,21 @@ export default function ForgotPasswordPage(): JSX.Element {
     } catch (error) {
       if (error instanceof ZodError) {
         setErrors((prev) => ({ ...prev, ...parseErrors(error) }));
+
+        return;
       }
+
+      setAlert({
+        alertCode: 0,
+        alertShow: true,
+        alertTitle: "Gagal Mengirimkan Permintaan",
+        alertDescription: "Terjadi kendala pada server kami. Mohon tunggu sebentar sebelum mencoba kembali.",
+        alertConfirm: () => {
+          setAlert(defaultAlert);
+
+          router.push("/login");
+        },
+      });
     } finally {
       setLoading(false);
     }

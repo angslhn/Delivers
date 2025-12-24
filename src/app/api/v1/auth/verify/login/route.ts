@@ -55,8 +55,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<AuthRespo
     const isExpired = !user.expires_at || Date.now() > user.expires_at.getTime();
 
     if (isExpired) {
-      await User.update({
-        id: user.id,
+      await User.update(user.id, {
         otp: null,
         token: null,
         expires_at: null,
@@ -69,7 +68,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<AuthRespo
             description: "Saat ini waktu verifikasi email telah habis. Silakan minta kode baru.",
           },
         },
-        { status: 400 }
+        { status: 422 }
       );
     }
 
@@ -85,7 +84,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<AuthRespo
       );
     }
 
-    await User.update({ id: user.id, otp: null, token: null, expires_at: null });
+    await User.update(user.id, { otp: null, token: null, expires_at: null });
 
     const { jwtSecure, cookieName } = env();
 

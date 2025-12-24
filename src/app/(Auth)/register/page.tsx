@@ -60,6 +60,8 @@ export default function RegisterPage(): JSX.Element {
 
       const { message, token }: AuthResponse = await response.json();
 
+      const codeResponse = response.status;
+
       const alertValue = {
         alertCode: response.status,
         alertShow: true,
@@ -76,6 +78,20 @@ export default function RegisterPage(): JSX.Element {
             router.push("/verify-email?token=" + token);
           },
         });
+
+        return;
+      }
+
+      const onPage = [400, 500];
+
+      if (onPage.includes(codeResponse)) {
+        setAlert({
+          ...alertValue,
+          alertConfirm: () => {
+            setAlert(defaultAlert);
+          },
+        });
+
         return;
       }
 
@@ -88,12 +104,21 @@ export default function RegisterPage(): JSX.Element {
             router.push("/login");
           },
         });
+
         return;
       }
-    } catch (error) {
-      if (error instanceof ZodError) {
-        setErrors(parseErrors(error));
-      }
+    } catch {
+      setAlert({
+        alertCode: 0,
+        alertShow: true,
+        alertTitle: "Gagal Mengirimkan Permintaan",
+        alertDescription: "Terjadi kendala pada server kami. Mohon tunggu sebentar sebelum mencoba kembali.",
+        alertConfirm: () => {
+          setAlert(defaultAlert);
+
+          router.push("/login");
+        },
+      });
     } finally {
       setLoading(false);
     }

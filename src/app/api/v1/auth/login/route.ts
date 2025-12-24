@@ -60,8 +60,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<AuthRespo
       const newOtp = otp(6);
       const newToken = token(64);
 
-      await User.update({
-        id: user.id,
+      await User.update(user.id, {
         otp: newOtp,
         token: newToken,
         expires_at: future({ minute: 10 }),
@@ -96,8 +95,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<AuthRespo
     const newOtp = otp(6);
     const newToken = token(64);
 
-    await User.update({
-      id: user.id,
+    await User.update(user.id, {
       otp: newOtp,
       token: newToken,
       expires_at: future({ minute: 10 }),

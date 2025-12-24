@@ -65,8 +65,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<AuthRespo
     const isExpired = !user.expires_at || Date.now() > user.expires_at.getTime();
 
     if (isExpired) {
-      await User.update({
-        id: user.id,
+      await User.update(user.id, {
         otp: null,
         token: null,
         expires_at: null,
@@ -95,7 +94,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<AuthRespo
       );
     }
 
-    await User.update({ id: user.id, status: "active", otp: null, token: null, expires_at: null });
+    await User.update(user.id, { status: "active", otp: null, token: null, expires_at: null });
 
     return NextResponse.json(
       {

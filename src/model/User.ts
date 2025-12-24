@@ -35,15 +35,13 @@ export const User = {
     return data["id"];
   },
 
-  update: async (data: Partial<UserEdit>): Promise<number | undefined> => {
-    const { id, ...updateData } = data;
-
-    if (Object.keys(updateData).length === 0) {
+  update: async (id: number, data: Partial<UserEdit>): Promise<number | undefined> => {
+    if (Object.keys(data).length === 0) {
       return id;
     }
 
-    const columns = Object.keys(updateData);
-    const values = Object.values(updateData);
+    const columns = Object.keys(data);
+    const values = Object.values(data);
 
     const placeholders = columns.map((column) => `${column} = ?`).join(", ");
 

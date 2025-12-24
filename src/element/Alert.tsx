@@ -9,12 +9,12 @@ export default function Alert(): JSX.Element {
   const { alertCode, alertShow, alertTitle, alertDescription, alertCancel, alertConfirm, setAlert } = useAlert();
 
   const successCodes = [200, 201, 204];
-  const warningCodes = [0, 400, 401, 403, 404, 409, 422, 429];
-  const errorCodes = [500, 502, 503, 504];
+  const warningCodes = [400, 401, 403, 404, 409, 422, 429];
 
   const type = ((alertCode: number) => {
     if (successCodes.includes(alertCode)) return "success";
     if (warningCodes.includes(alertCode)) return "warning";
+
     return "error";
   })(alertCode);
 

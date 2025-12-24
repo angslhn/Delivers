@@ -41,8 +41,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<AuthRespo
 
     const newToken = token(64);
 
-    await User.update({
-      id: user.id,
+    await User.update(user.id, {
       token: newToken,
       expires_at: future({ minute: 10 }),
     });

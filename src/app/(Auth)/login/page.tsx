@@ -57,23 +57,38 @@ export default function LoginPage(): JSX.Element {
 
       const { message, token }: AuthResponse = await response.json();
 
+      const responseCode = response.status;
+
       const alertValue = {
-        alertCode: response.status,
+        alertCode: responseCode,
         alertShow: true,
         alertTitle: message.title,
         alertDescription: message.description,
       };
 
-      const toVerifyCodes = [200, 403];
+      const toVerify = [200, 403];
 
-      if (toVerifyCodes.includes(response.status)) {
+      if (toVerify.includes(responseCode)) {
         const page = { "200": "/login/verify", "403": "/verify-email" };
 
         setAlert({
           ...alertValue,
           alertConfirm: () => {
-            router.push(page[String(response.status) as "200" | "403"] + "?token=" + token);
+            router.push(page[String(responseCode) as "200" | "403"] + "?token=" + token);
 
+            setAlert(defaultAlert);
+          },
+        });
+
+        return;
+      }
+
+      const onPage = [400, 500];
+
+      if (onPage.includes(responseCode)) {
+        setAlert({
+          ...alertValue,
+          alertConfirm: () => {
             setAlert(defaultAlert);
           },
         });
@@ -83,17 +98,31 @@ export default function LoginPage(): JSX.Element {
 
       const fieldErrors = [401, 404];
 
-      if (fieldErrors.includes(response.status)) {
+      if (fieldErrors.includes(responseCode)) {
         const field: Record<"401" | "404", Field> = { "401": "password", "404": "email" };
 
-        setErrors((prev) => ({ ...prev, [field[String(response.status) as "401" | "404"]]: message.description }));
+        setErrors((prev) => ({ ...prev, [field[String(responseCode) as "401" | "404"]]: message.description }));
 
         return;
       }
     } catch (error) {
       if (error instanceof ZodError) {
         setErrors(parseErrors(error));
+
+        return;
       }
+
+      setAlert({
+        alertCode: 0,
+        alertShow: true,
+        alertTitle: "Gagal Mengirimkan Permintaan",
+        alertDescription: "Terjadi kendala pada server kami. Mohon tunggu sebentar sebelum mencoba kembali.",
+        alertConfirm: () => {
+          setAlert(defaultAlert);
+
+          router.push("/login");
+        },
+      });
     } finally {
       setLoading(false);
     }

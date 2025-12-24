@@ -44,6 +44,8 @@ export default function VerifyEmailPage(): JSX.Element {
 
       const { message }: AuthResponse = await response.json();
 
+      const codeResponse = response.status;
+
       const alertValue = {
         alertCode: response.status,
         alertShow: true,
@@ -51,30 +53,45 @@ export default function VerifyEmailPage(): JSX.Element {
         alertDescription: message.description,
       };
 
-      function toLogin(): void {
-        setAlert(defaultAlert);
+      const onPage = [400, 500];
 
-        router.push("/login");
-      }
-
-      const toLoginCode = [200, 403, 409, 500];
-
-      if (response.status == 400) {
+      if (onPage.includes(codeResponse)) {
         setAlert({
           ...alertValue,
           alertConfirm: () => {
             setAlert(defaultAlert);
           },
         });
+
+        return;
       }
 
-      if (toLoginCode.includes(response.status)) {
+      const toLogin = [200, 403, 404, 409];
+
+      if (toLogin.includes(codeResponse)) {
         setAlert({
           ...alertValue,
-          alertConfirm: () => toLogin(),
+          alertConfirm: () => {
+            setAlert(defaultAlert);
+
+            router.push("/login");
+          },
         });
+
+        return;
       }
     } catch {
+      setAlert({
+        alertCode: 0,
+        alertShow: true,
+        alertTitle: "Gagal Mengirimkan Permintaan",
+        alertDescription: "Terjadi kendala pada server kami. Mohon tunggu sebentar sebelum mencoba kembali.",
+        alertConfirm: () => {
+          setAlert(defaultAlert);
+
+          router.push("/login");
+        },
+      });
     } finally {
       setLoading(false);
     }

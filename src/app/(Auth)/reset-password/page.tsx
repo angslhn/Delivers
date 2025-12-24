@@ -3,13 +3,13 @@
 import { useState } from "react";
 import { ZodError } from "zod";
 import { useSearchParams, useRouter } from "next/navigation";
-import { defaultAlert } from "@/context/AlertContext";
-import { useAlert } from "@/hook/Alert";
+import { defaultAlert } from "@/contexts/AlertContext";
+import { useAlert } from "@/hooks/Alert";
 
-import Input from "@/element/Input";
-import Loading from "@/element/Loading";
-import resetPassword from "@/schema/auth/reset-password";
-import parseErrors from "@/helper/parse-errors";
+import Input from "@/elements/Input";
+import Loading from "@/elements/Loading";
+import resetPassword from "@/schemas/auth/reset-password";
+import parseErrors from "@/helpers/parse-errors";
 
 import type { JSX, ChangeEvent, FormEvent } from "react";
 import type { AuthResponse } from "@/types/global";

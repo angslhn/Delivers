@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 
-import { AuthContext } from "@/context/AuthContext";
+import { AuthContext } from "@/contexts/AuthContext";
 
 import type { UserPayload } from "@/types/global";
 

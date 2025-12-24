@@ -1,8 +1,8 @@
 import env from "@/config/env";
 import { cookies } from "next/headers";
-import { verifyToken } from "@/helper/auth";
+import { verifyToken } from "@/helpers/auth";
 
-import Page from "@/container/Page";
+import Page from "@/containers/Page";
 
 import type { JSX, ReactNode } from "react";
 import type { UserPayload } from "@/types/global";

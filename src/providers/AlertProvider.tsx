@@ -1,7 +1,6 @@
 import { useState } from "react";
 
-import { AlertContext } from "@/context/AlertContext";
-import { defaultAlert } from "@/context/AlertContext";
+import { AlertContext, defaultAlert } from "@/contexts/AlertContext";
 
 import type { Alert } from "@/types/global";
 import type { JSX, ReactNode } from "react";

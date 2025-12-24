@@ -5,8 +5,8 @@ import { useEffect, useState } from "react";
 
 import Image from "next/image";
 
-import firstBanner from "@/asset/image/banner_1.jpg";
-import { price, sold, title } from "@/helper/product";
+import firstBanner from "@/assets/images/banner_1.jpg";
+import { price, sold, title } from "@/helpers/product";
 
 import type { JSONProduct, Product } from "@/types/global";
 

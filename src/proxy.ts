@@ -1,6 +1,6 @@
 import env from "@/config/env";
 import { NextRequest, NextResponse } from "next/server";
-import { authPath, authTokenPath, protectedPath } from "@/resource/path";
+import { authPath, authTokenPath, protectedPath } from "@/resources/path";
 
 export function proxy(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl;

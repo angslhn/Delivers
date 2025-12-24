@@ -1,7 +1,7 @@
 "use client";
 
 import { useContext } from "react";
-import { AuthContext } from "@/context/AuthContext";
+import { AuthContext } from "@/contexts/AuthContext";
 import { UserPayload } from "@/types/global";
 
 export function useAuth(): UserPayload | null {

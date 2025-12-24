@@ -1,7 +1,7 @@
 "use client";
 
-import AlertProvider from "@/provider/AlertProvider";
-import AuthProvider from "@/provider/AuthProvider";
+import AlertProvider from "@/providers/AlertProvider";
+import AuthProvider from "@/providers/AuthProvider";
 import { UserPayload } from "@/types/global";
 
 import type { ReactNode } from "react";

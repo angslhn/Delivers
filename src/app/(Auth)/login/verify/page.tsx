@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { defaultAlert } from "@/context/AlertContext";
-import { useAlert } from "@/hook/Alert";
+import { defaultAlert } from "@/contexts/AlertContext";
+import { useAlert } from "@/hooks/Alert";
 
-import Timer from "@/element/Timer";
-import Loading from "@/element/Loading";
-import InputOTP from "@/element/InputOTP";
+import Timer from "@/elements/Timer";
+import Loading from "@/elements/Loading";
+import InputOTP from "@/elements/InputOTP";
 
 import type { JSX, FormEvent } from "react";
 import type { AuthResponse, Delay } from "@/types/global";

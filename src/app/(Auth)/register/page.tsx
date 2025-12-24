@@ -3,19 +3,16 @@
 import type { ChangeEvent, FormEvent, JSX } from "react";
 
 import Link from "next/link";
-
 import { useState } from "react";
-import { ZodError } from "zod";
 import { useRouter } from "next/navigation";
-import { useAlert } from "@/hook/Alert";
-import { defaultAlert } from "@/context/AlertContext";
+import { useAlert } from "@/hooks/Alert";
+import { defaultAlert } from "@/contexts/AlertContext";
 
-import signupSchema from "@/schema/auth/register";
-import parseErrors from "@/helper/parse-errors";
-import capitalize from "@/helper/capitalize";
+import signupSchema from "@/schemas/auth/register";
+import capitalize from "@/helpers/capitalize";
 
-import Input from "@/element/Input";
-import Loading from "@/element/Loading";
+import Input from "@/elements/Input";
+import Loading from "@/elements/Loading";
 
 import type { AuthResponse } from "@/types/global";
 

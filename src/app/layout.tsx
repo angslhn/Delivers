@@ -1,9 +1,9 @@
 import type { JSX, ReactNode } from "react";
 
-import App from "@/container/App";
-import Alert from "@/element/Alert";
-import Header from "@/layout/Header";
-import Menu from "@/layout/Menu";
+import App from "@/containers/App";
+import Header from "@/layouts/Header";
+import Menu from "@/layouts/Menu";
+import Alert from "@/elements/Alert";
 
 import type { Metadata } from "next";
 

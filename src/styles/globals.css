@@ -1,0 +1,58 @@
+@import url("./fonts.css");
+
+@import "tailwindcss";
+
+html {
+  font-family: "Rubik";
+}
+
+body {
+  background-color: #f8fafc;
+}
+
+/* Color Base */
+@theme {
+  --color-steel-night: #151515;
+  --color-cloud-white: #f8fafc;
+}
+
+/* Viewport */
+@theme {
+  --breakpoint-xxs: 20rem;
+  --breakpoint-xs: 22.5rem;
+  --breakpoint-s: 24.375rem;
+  --breakpoint-s-plus: 26.875rem;
+  --breakpoint-s-medium: 28.125rem;
+  --breakpoint-s-large: 31.25rem;
+  --breakpoint-s-extra-large: 34.375rem;
+}
+
+/* Font Size */
+@theme {
+  --text-s: 0.9rem;
+  --text-xs: 0.75rem;
+}
+
+@utility column-top {
+  @apply flex flex-col justify-baseline items-center;
+}
+
+@utility column-left {
+  @apply flex flex-col justify-center items-baseline;
+}
+
+@utility column-center {
+  @apply flex flex-col justify-center items-center;
+}
+
+@utility row-left {
+  @apply flex justify-baseline items-center;
+}
+
+@utility row-center {
+  @apply flex justify-center items-center;
+}
+
+@utility row-evenly {
+  @apply flex justify-evenly items-center;
+}
